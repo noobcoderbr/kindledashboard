@@ -198,19 +198,14 @@ window.render = function(data) {
 
     }
 
-    document.getElementById("wifiIcon").innerHTML   = ICONS.wifi;
-    document.getElementById("wifiQr").innerHTML     = data.wifi.qr;
-    document.getElementById("wifiName").textContent = data.wifi.name;
+    document.getElementById("wifiIcon").innerHTML = ICONS.wifi;
+    document.getElementById("wifiQr").innerHTML   = data.wifi.qr;
 
     document.getElementById("whatsappIcon").innerHTML = ICONS.whatsapp;
 
     if (data.whatsapp.hasPhone) {
 
         document.getElementById("whatsappQr").innerHTML = data.whatsapp.qr;
-
-    } else {
-
-        document.getElementById("whatsappCol").style.display = "none";
 
     }
 
