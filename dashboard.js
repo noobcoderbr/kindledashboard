@@ -157,14 +157,16 @@ window.render = function(data) {
         ).innerHTML = ICONS.luggage;
 
         document.getElementById(
-            "stayIconRight"
-        ).innerHTML = ICONS.calendar;
-
-        document.getElementById(
             "stayContent"
         ).innerHTML =
 
-            `<div class="stay-checkout">
+            `<div class="stay-days">
+
+                ${daysLabel}
+
+            </div>
+
+            <div class="stay-checkout">
 
                 Check-out ${data.stay.checkout}
 
@@ -173,18 +175,6 @@ window.render = function(data) {
             <div class="stay-until">
 
                 Até ${data.house.checkoutTime}
-
-            </div>
-
-            <div class="stay-days">
-
-                ${daysLabel}
-
-            </div>
-
-            <div class="stay-thanks">
-
-                Agradecemos por escolher nosso apê.
 
             </div>`;
 
@@ -208,13 +198,16 @@ window.render = function(data) {
 
     }
 
-    document.getElementById("iconWifi").innerHTML   = ICONS.wifi;
-    document.getElementById("iconLock").innerHTML   = ICONS.lock;
-    document.getElementById("iconClock").innerHTML  = ICONS.clock;
+    document.getElementById("wifiIcon").innerHTML = ICONS.wifi;
+    document.getElementById("wifiQr").innerHTML   = data.wifi.qr;
 
-    document.getElementById("wifi").textContent         = data.house.wifiName;
-    document.getElementById("password").textContent     = data.house.wifiPassword;
-    document.getElementById("checkoutTime").textContent = data.house.checkoutTime;
+    document.getElementById("whatsappIcon").innerHTML = ICONS.whatsapp;
+
+    if (data.whatsapp.hasPhone) {
+
+        document.getElementById("whatsappQr").innerHTML = data.whatsapp.qr;
+
+    }
 
     document.getElementById(
         "updated"

@@ -1,6 +1,24 @@
 const puppeteer = require('puppeteer');
+const QRCode = require('qrcode');
+const ical = require('node-ical');
 
 async function run() {
+
+    const phone = process.env.WHATSAPP_PHONE || '';
+    const whatsappQr = phone
+        ? await QRCode.toString(
+            'https://wa.me/' + phone,
+            { type: 'svg', margin: 0, color: { dark: '#111', light: '#fff' } }
+          )
+        : '';
+
+    const wifiSsid = process.env.WIFI_SSID || 'APE_BOTAFOGO';
+    const wifiPass = process.env.WIFI_PASSWORD || 'rio2026';
+    const wifiQr = await QRCode.toString(
+        `WIFI:T:WPA;S:${wifiSsid};P:${wifiPass};;`,
+        { type: 'svg', margin: 0, color: { dark: '#111', light: '#fff' } }
+    );
+
 
     const response = await fetch(
         'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=4'
@@ -43,47 +61,66 @@ async function run() {
 
         },
 
-        stay: (() => {
+        stay: await (async () => {
 
-            const occupied = true;
+            const icalUrl = process.env.AIRBNB_ICAL_URL;
 
-            if (!occupied) {
-
-                return {
-                    occupied: false,
-                    checkout: null,
-                    daysLeft: null,
-                    nextCheckIn: null
-                };
-
+            if (!icalUrl) {
+                return { occupied: false, checkout: null, daysLeft: null };
             }
 
-            const checkoutDate = new Date(now);
-            checkoutDate.setDate(now.getDate() + 1);
+            let events;
+            try {
+                events = await ical.async.fromURL(icalUrl);
+            } catch (e) {
+                console.error('iCal fetch failed:', e.message);
+                return { occupied: false, checkout: null, daysLeft: null };
+            }
+
+            const today = new Date(now);
+            today.setHours(0, 0, 0, 0);
+
+            let current = null;
+
+            for (const ev of Object.values(events)) {
+                if (ev.type !== 'VEVENT') continue;
+                const start = new Date(ev.start);
+                const end   = new Date(ev.end);
+                start.setHours(0, 0, 0, 0);
+                end.setHours(0, 0, 0, 0);
+                if (start <= today && today < end) {
+                    current = ev;
+                    break;
+                }
+            }
+
+            if (!current) {
+                return { occupied: false, checkout: null, daysLeft: null };
+            }
+
+            const checkoutDate = new Date(current.end);
+            checkoutDate.setHours(0, 0, 0, 0);
 
             const msPerDay = 1000 * 60 * 60 * 24;
-            const daysLeft = Math.ceil(
-                (checkoutDate - now) / msPerDay
-            );
+            const daysLeft = Math.ceil((checkoutDate - today) / msPerDay);
 
-            const checkoutFormatted =
-                checkoutDate.toLocaleDateString(
-                    'pt-BR',
-                    {
-                        weekday: 'long',
-                        day: 'numeric',
-                        month: 'long'
-                    }
-                );
+            const checkoutFormatted = checkoutDate.toLocaleDateString('pt-BR', {
+                weekday: 'long', day: 'numeric', month: 'long'
+            });
 
-            return {
-                occupied: true,
-                checkout: checkoutFormatted,
-                daysLeft,
-                nextCheckIn: null
-            };
+            return { occupied: true, checkout: checkoutFormatted, daysLeft };
 
         })(),
+
+        whatsapp: {
+            qr: whatsappQr,
+            hasPhone: !!phone
+        },
+
+        wifi: {
+            qr: wifiQr,
+            name: wifiSsid
+        },
 
         weather: {
 
