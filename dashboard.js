@@ -87,35 +87,47 @@ window.render = function(data) {
 
             forecastHtml += `
 
-            <div class="fc">
+<div class="fc">
 
-                <div class="fc-day">
+    <div class="fc-day">
 
-                    ${f.label}
+        ${f.label}
 
-                </div>
+    </div>
 
-                <div class="fc-icon">
+    <div class="fc-icon">
 
-                    ${icon.icon}
+        ${icon.icon}
 
-                </div>
+    </div>
 
-                <div class="fc-hi">
+    <div class="fc-hi">
 
-                    ${f.max}°
+        ${f.max}°
 
-                </div>
+    </div>
 
-                <div class="fc-lo">
+    <div class="fc-lo">
 
-                    ${f.min}°
+        ${f.min}°
 
-                </div>
+    </div>
 
-            </div>
+    <div class="fc-rain">
 
-            `;
+        <span class="drop">
+
+            💧
+
+        </span>
+
+        ${f.pop}%
+
+    </div>
+
+</div>
+
+`;
 
         }
 
