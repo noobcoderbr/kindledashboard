@@ -1,4 +1,21 @@
 const fs = require('fs');
+
+function diaSemana(data) {
+
+    const dias = [
+        'DOMINGO',
+        'SEGUNDA-FEIRA',
+        'TERÇA-FEIRA',
+        'QUARTA-FEIRA',
+        'QUINTA-FEIRA',
+        'SEXTA-FEIRA',
+        'SÁBADO'
+    ];
+
+    return dias[
+        new Date(data).getDay()
+    ];
+}
 const puppeteer = require('puppeteer');
 
 async function run() {
@@ -46,6 +63,84 @@ async function run() {
             clima
         );
 
+    html =
+    html.replace(
+        '{{DAY}}',
+        diaSemana(
+            new Date()
+        )
+    );
+
+html =
+    html.replace(
+        '{{DATE}}',
+        dataAtual
+    );
+
+html =
+    html.replace(
+        '{{MESSAGE}}',
+        `Hoje o tempo está ${clima.toLowerCase()}.`
+    );
+
+html =
+    html.replace(
+        '{{MAX}}',
+        maxHoje
+    );
+
+html =
+    html.replace(
+        '{{MIN}}',
+        minHoje
+    );
+
+html =
+    html.replace(
+        '{{FORECAST}}',
+        forecastHtml
+    );
+    
+const hoje = new Date();
+
+const dataAtual =
+    hoje.toLocaleDateString(
+        'pt-BR',
+        {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        }
+    );
+
+let forecastHtml = '';
+
+for (let i = 1; i <= 3; i++) {
+
+    const dia =
+        ['DOM','SEG','TER','QUA','QUI','SEX','SAB']
+        [
+            new Date(
+                data.daily.time[i]
+            ).getDay()
+        ];
+
+    const max =
+        Math.round(
+            data.daily.temperature_2m_max[i]
+        );
+
+    const min =
+        Math.round(
+            data.daily.temperature_2m_min[i]
+        );
+
+    forecastHtml += `
+        <div class="forecast-row">
+            ${dia} — ${max}° / ${min}°
+        </div>
+    `;
+}
     fs.writeFileSync(
         'index.html',
         html
