@@ -113,6 +113,46 @@ A9 9 0 0 0 20 40
 </svg>
 `,
 
+wifi: `
+<svg viewBox="0 0 64 64"
+fill="none"
+stroke="#111"
+stroke-width="2.5">
+
+<path d="M8 24 C18 14 46 14 56 24"/>
+<path d="M16 33 C22 27 42 27 48 33"/>
+<path d="M24 42 C27 39 37 39 40 42"/>
+<circle cx="32" cy="52" r="3" fill="#111" stroke="none"/>
+
+</svg>
+`,
+
+lock: `
+<svg viewBox="0 0 64 64"
+fill="none"
+stroke="#111"
+stroke-width="2.5">
+
+<rect x="16" y="30" width="32" height="24" rx="3"/>
+<path d="M22 30 V22 A10 10 0 0 1 42 22 V30"/>
+<circle cx="32" cy="43" r="3" fill="#111" stroke="none"/>
+
+</svg>
+`,
+
+clock: `
+<svg viewBox="0 0 64 64"
+fill="none"
+stroke="#111"
+stroke-width="2.5">
+
+<circle cx="32" cy="32" r="22"/>
+<line x1="32" y1="32" x2="32" y2="16"/>
+<line x1="32" y1="32" x2="44" y2="38"/>
+
+</svg>
+`,
+
 luggage: `
 <svg viewBox="0 0 64 64"
 fill="none"
