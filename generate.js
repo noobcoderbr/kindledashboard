@@ -37,7 +37,7 @@ function diaSemana(data) {
 async function run() {
 
     const response = await fetch(
-        'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&forecast_days=4'
+        'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=4'
     );
 
     const data = await response.json();
@@ -67,9 +67,19 @@ async function run() {
         const min =
             Math.round(data.daily.temperature_2m_min[i]);
 
+        const codigoClima =
+            data.daily.weather_code[i];
+
+        const climaDia =
+            traduzClima(codigoClima);
+        
         proximosDias += `
             <li>
-                ${dia}: ${max}° / ${min}°
+                ${dia}
+                <br>
+                ${climaDia}
+            <br>
+                ${max}° / ${min}°
             </li>
         `;
     }
