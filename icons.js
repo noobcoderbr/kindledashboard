@@ -27,26 +27,18 @@ partlyCloudy: `
 <svg viewBox="0 0 64 64"
 fill="none"
 stroke="#111"
-stroke-width="2.5">
+stroke-width="3"
+stroke-linecap="round"
+stroke-linejoin="round">
 
-<circle cx="22" cy="22" r="8"/>
+<circle cx="42" cy="19" r="8"/>
+<line x1="42" y1="8"  x2="42" y2="1"/>
+<line x1="50" y1="11" x2="55" y2="6"/>
+<line x1="53" y1="19" x2="60" y2="19"/>
+<line x1="34" y1="11" x2="29" y2="6"/>
 
-<line x1="22" y1="8" x2="22" y2="14"/>
-<line x1="22" y1="30" x2="22" y2="36"/>
-<line x1="8" y1="22" x2="14" y2="22"/>
-<line x1="30" y1="22" x2="36" y2="22"/>
-<line x1="12" y1="12" x2="17" y2="17"/>
-<line x1="27" y1="27" x2="32" y2="32"/>
-<line x1="12" y1="32" x2="17" y2="27"/>
-<line x1="27" y1="17" x2="32" y2="12"/>
-
-<path d="
-M26 52
-H50
-A9 9 0 0 0 50 34
-A12 12 0 0 0 29 32
-A8 8 0 0 0 26 52
-"/>
+<path d="M16 49 H45 a10 10 0 0 0 1.6-19.9 A14 14 0 0 0 18 27 A11 11 0 0 0 16 49 Z"
+fill="#111" stroke="none"/>
 
 </svg>
 `,
@@ -54,16 +46,11 @@ A8 8 0 0 0 26 52
 cloud: `
 <svg viewBox="0 0 64 64"
 fill="none"
-stroke="#111"
-stroke-width="2.5">
+stroke-linecap="round"
+stroke-linejoin="round">
 
-<path d="
-M20 46
-H48
-A10 10 0 0 0 48 26
-A14 14 0 0 0 21 24
-A9 9 0 0 0 20 46
-"/>
+<path d="M16 46 H46 a10 10 0 0 0 1.6-19.9 A14 14 0 0 0 18 24 A11 11 0 0 0 16 46 Z"
+fill="#111" stroke="none"/>
 
 </svg>
 `,
@@ -72,19 +59,16 @@ rain: `
 <svg viewBox="0 0 64 64"
 fill="none"
 stroke="#111"
-stroke-width="2.5">
+stroke-width="3.4"
+stroke-linecap="round"
+stroke-linejoin="round">
 
-<path d="
-M20 40
-H48
-A10 10 0 0 0 48 22
-A14 14 0 0 0 21 20
-A9 9 0 0 0 20 40
-"/>
+<path d="M18 40 H44 a9 9 0 0 0 1.5-17.9 A13 13 0 0 0 19 20 A10 10 0 0 0 18 40 Z"
+fill="#111" stroke="none"/>
 
-<line x1="24" y1="48" x2="20" y2="56"/>
-<line x1="34" y1="48" x2="30" y2="56"/>
-<line x1="44" y1="48" x2="40" y2="56"/>
+<line x1="22" y1="47" x2="20" y2="53"/>
+<line x1="32" y1="47" x2="30" y2="53"/>
+<line x1="42" y1="47" x2="40" y2="53"/>
 
 </svg>
 `,
@@ -93,22 +77,14 @@ storm: `
 <svg viewBox="0 0 64 64"
 fill="none"
 stroke="#111"
-stroke-width="2.5">
+stroke-width="3"
+stroke-linecap="round"
+stroke-linejoin="round">
 
-<path d="
-M20 40
-H48
-A10 10 0 0 0 48 22
-A14 14 0 0 0 21 20
-A9 9 0 0 0 20 40
-"/>
+<path d="M18 38 H44 a9 9 0 0 0 1.5-17.9 A13 13 0 0 0 19 18 A10 10 0 0 0 18 38 Z"
+fill="#111" stroke="none"/>
 
-<polyline points="
-32,44
-26,54
-34,54
-28,62
-"/>
+<polyline points="34,42 28,54 36,54 30,63" stroke="#111" fill="none"/>
 
 </svg>
 `,
@@ -239,17 +215,10 @@ Z"/>
 `,
 
 drop: `
-<svg viewBox="0 0 24 24"
-fill="none"
-stroke="#666"
-stroke-width="2">
+<svg viewBox="0 0 24 34" fill="none">
 
-<path d="
-M12 2
-C12 2 6 10 6 14
-A6 6 0 0 0 18 14
-C18 10 12 2 12 2
-"/>
+<path d="M12 2 C5 10 2 16 2 22 a10 10 0 0 0 20 0 C22 16 19 10 12 2 Z"
+fill="#333"/>
 
 </svg>
 `
