@@ -5,12 +5,11 @@ const ical = require('node-ical');
 async function run() {
 
     const phone = process.env.WHATSAPP_PHONE || '';
-    const whatsappQr = phone
-        ? await QRCode.toString(
-            'https://wa.me/' + phone,
-            { type: 'svg', margin: 0, color: { dark: '#111', light: '#fff' } }
-          )
-        : '';
+    const whatsappTarget = phone ? 'https://wa.me/' + phone : 'https://wa.me';
+    const whatsappQr = await QRCode.toString(
+        whatsappTarget,
+        { type: 'svg', margin: 0, color: { dark: '#111', light: '#fff' } }
+    );
 
     const wifiSsid = process.env.WIFI_SSID || 'APE_BOTAFOGO';
     const wifiPass = process.env.WIFI_PASSWORD || 'rio2026';
@@ -113,8 +112,7 @@ async function run() {
         })(),
 
         whatsapp: {
-            qr: whatsappQr,
-            hasPhone: !!phone
+            qr: whatsappQr
         },
 
         wifi: {
