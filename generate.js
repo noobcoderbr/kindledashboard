@@ -1,6 +1,16 @@
 const puppeteer = require('puppeteer');
+const QRCode = require('qrcode');
 
 async function run() {
+
+    const phone = process.env.WHATSAPP_PHONE || '';
+    const whatsappQr = phone
+        ? await QRCode.toString(
+            'https://wa.me/' + phone,
+            { type: 'svg', margin: 0, color: { dark: '#111', light: '#fff' } }
+          )
+        : '';
+
 
     const response = await fetch(
         'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=4'
@@ -84,6 +94,11 @@ async function run() {
             };
 
         })(),
+
+        whatsapp: {
+            qr: whatsappQr,
+            hasPhone: !!phone
+        },
 
         weather: {
 

@@ -216,6 +216,18 @@ window.render = function(data) {
     document.getElementById("password").textContent     = data.house.wifiPassword;
     document.getElementById("checkoutTime").textContent = data.house.checkoutTime;
 
+    document.getElementById("whatsappIcon").innerHTML = ICONS.whatsapp;
+
+    if (data.whatsapp.hasPhone) {
+
+        document.getElementById("whatsappQr").innerHTML = data.whatsapp.qr;
+
+    } else {
+
+        document.getElementById("whatsappGrid").style.display = "none";
+
+    }
+
     document.getElementById(
         "updated"
     ).textContent =

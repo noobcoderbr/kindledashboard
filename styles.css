@@ -397,6 +397,58 @@ body {
     font-weight: 600;
 }
 
+/* WHATSAPP */
+
+.whatsapp-grid {
+
+    display: grid;
+
+    grid-template-columns: auto 1fr auto;
+
+    align-items: center;
+
+    gap: 32px;
+
+}
+
+.whatsapp-icon svg {
+
+    width: 50px;
+
+    height: 50px;
+
+}
+
+.whatsapp-title {
+
+    font-family: var(--serif);
+
+    font-size: 28px;
+
+    font-weight: 700;
+
+    margin-bottom: 8px;
+
+}
+
+.whatsapp-sub {
+
+    font-size: 20px;
+
+    color: var(--soft);
+
+    line-height: 1.4;
+
+}
+
+.whatsapp-qr svg {
+
+    width: 140px;
+
+    height: 140px;
+
+}
+
 /* FOOTER */
 
 footer {

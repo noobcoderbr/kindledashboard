@@ -195,6 +195,20 @@ stroke-width="2.5">
 </svg>
 `,
 
+whatsapp: `
+<svg viewBox="0 0 64 64"
+fill="none"
+stroke="#111"
+stroke-width="2.5">
+
+<circle cx="32" cy="32" r="22"/>
+
+<path d="M20 38 C22 44 28 48 35 48 C38 48 41 47 43 45 L49 46 L47 41 C49 38 50 35 50 32 C50 24 42 18 32 18 C22 18 14 24 14 32 C14 35 15 38 17 41 L14 48 Z"
+stroke="#111" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+
+</svg>
+`,
+
 drop: `
 <svg viewBox="0 0 24 24"
 fill="none"
