@@ -60,6 +60,9 @@ async function run() {
                     meteo.current.temperature_2m
                 ),
 
+            rainChance:
+                meteo.daily.precipitation_probability_max[0],
+            
             feels:
                 Math.round(
                     meteo.current.apparent_temperature
