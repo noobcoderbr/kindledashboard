@@ -2,8 +2,6 @@ const ICONS = {
 
 sun: `
 <svg viewBox="0 0 64 64"
-width="120"
-height="120"
 fill="none"
 stroke="#111"
 stroke-width="2.5">
@@ -25,10 +23,36 @@ stroke-width="2.5">
 </svg>
 `,
 
+partlyCloudy: `
+<svg viewBox="0 0 64 64"
+fill="none"
+stroke="#111"
+stroke-width="2.5">
+
+<circle cx="22" cy="22" r="8"/>
+
+<line x1="22" y1="8" x2="22" y2="14"/>
+<line x1="22" y1="30" x2="22" y2="36"/>
+<line x1="8" y1="22" x2="14" y2="22"/>
+<line x1="30" y1="22" x2="36" y2="22"/>
+<line x1="12" y1="12" x2="17" y2="17"/>
+<line x1="27" y1="27" x2="32" y2="32"/>
+<line x1="12" y1="32" x2="17" y2="27"/>
+<line x1="27" y1="17" x2="32" y2="12"/>
+
+<path d="
+M26 52
+H50
+A9 9 0 0 0 50 34
+A12 12 0 0 0 29 32
+A8 8 0 0 0 26 52
+"/>
+
+</svg>
+`,
+
 cloud: `
 <svg viewBox="0 0 64 64"
-width="120"
-height="120"
 fill="none"
 stroke="#111"
 stroke-width="2.5">
@@ -46,8 +70,6 @@ A9 9 0 0 0 20 46
 
 rain: `
 <svg viewBox="0 0 64 64"
-width="120"
-height="120"
 fill="none"
 stroke="#111"
 stroke-width="2.5">
@@ -69,8 +91,6 @@ A9 9 0 0 0 20 40
 
 storm: `
 <svg viewBox="0 0 64 64"
-width="120"
-height="120"
 fill="none"
 stroke="#111"
 stroke-width="2.5">
@@ -95,8 +115,6 @@ A9 9 0 0 0 20 40
 
 drop: `
 <svg viewBox="0 0 24 24"
-width="12"
-height="12"
 fill="none"
 stroke="#666"
 stroke-width="2">

@@ -108,6 +108,14 @@ body {
     vertical-align: top;
 }
 
+.hero-icon svg {
+
+    width: 120px;
+
+    height: 120px;
+
+}
+
 .hero-condition {
 
     margin-top: 20px;
@@ -189,9 +197,15 @@ body {
 
 .fc-icon {
 
-    font-size: 48px;
-
     margin-bottom: 20px;
+
+}
+
+.fc-icon svg {
+
+    width: 60px;
+
+    height: 60px;
 
 }
 
@@ -233,9 +247,11 @@ body {
 
 }
 
-.drop {
+.drop svg {
 
-    font-size: 18px;
+    width: 14px;
+
+    height: 14px;
 
 }
 
