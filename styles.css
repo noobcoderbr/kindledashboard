@@ -40,10 +40,7 @@ body {
 
 body {
 
-    padding:
-
-        70px
-        80px;
+    padding: 50px 80px;
 
 }
 
@@ -57,7 +54,7 @@ body {
 
     align-items: baseline;
 
-    padding-bottom: 20px;
+    padding-bottom: 16px;
 
     border-bottom: 2px solid var(--ink);
 
@@ -67,14 +64,14 @@ body {
 
     font-family: var(--serif);
 
-    font-size: 46px;
+    font-size: 38px;
 
     font-weight: 700;
 }
 
 .date {
 
-    font-size: 24px;
+    font-size: 20px;
 
     color: var(--soft);
 }
@@ -85,15 +82,15 @@ body {
 
     display: grid;
 
-    grid-template-columns: 240px 1fr auto;
+    grid-template-columns: 200px 1fr auto;
 
     align-items: center;
 
-    gap: 0 50px;
+    gap: 0 40px;
 
-    margin-top: 40px;
+    margin-top: 24px;
 
-    margin-bottom: 40px;
+    margin-bottom: 24px;
 
 }
 
@@ -107,7 +104,7 @@ body {
 
     font-family: var(--serif);
 
-    font-size: 44px;
+    font-size: 38px;
 
     font-weight: 400;
 
@@ -125,7 +122,7 @@ body {
 
     font-family: var(--serif);
 
-    font-size: 240px;
+    font-size: 180px;
 
     line-height: 1;
 
@@ -137,38 +134,38 @@ body {
 
 .deg {
 
-    font-size: 90px;
+    font-size: 70px;
 
-    margin-top: 24px;
+    margin-top: 18px;
 
 }
 
 .hero-icon svg {
 
-    width: 120px;
+    width: 100px;
 
-    height: 120px;
+    height: 100px;
 
 }
 
 .hero-condition {
 
-    margin-top: 20px;
+    margin-top: 14px;
 
-    font-size: 46px;
+    font-size: 36px;
 
     font-weight: 600;
 }
 
 .hero-sub {
 
-    margin-top: 25px;
+    margin-top: 16px;
 
     color: var(--soft);
 
-    font-size: 28px;
+    font-size: 22px;
 
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 /* CARDS */
@@ -177,9 +174,9 @@ body {
 
     border: 1px solid var(--line);
 
-    padding: 40px;
+    padding: 28px 32px;
 
-    margin-bottom: 35px;
+    margin-bottom: 24px;
 
 }
 
@@ -189,11 +186,11 @@ body {
 
     letter-spacing: 4px;
 
-    font-size: 20px;
+    font-size: 16px;
 
     color: var(--soft);
 
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 /* FORECAST */
@@ -202,11 +199,7 @@ body {
 
     display: grid;
 
-    grid-template-columns:
-        repeat(
-            4,
-            1fr
-        );
+    grid-template-columns: repeat(4, 1fr);
 
     gap: 10px;
 
@@ -220,33 +213,33 @@ body {
 
 .fc-day {
 
-    font-size: 20px;
+    font-size: 16px;
 
     letter-spacing: 3px;
 
     color: var(--soft);
 
-    margin-bottom: 25px;
+    margin-bottom: 16px;
 
 }
 
 .fc-icon {
 
-    margin-bottom: 20px;
+    margin-bottom: 14px;
 
 }
 
 .fc-icon svg {
 
-    width: 60px;
+    width: 44px;
 
-    height: 60px;
+    height: 44px;
 
 }
 
 .fc-hi {
 
-    font-size: 48px;
+    font-size: 38px;
 
     font-weight: 700;
 
@@ -256,19 +249,19 @@ body {
 
 .fc-lo {
 
-    font-size: 34px;
+    font-size: 26px;
 
     color: var(--soft);
 
-    margin-top: 8px;
+    margin-top: 6px;
 
 }
 
 .fc-rain {
 
-    margin-top: 20px;
+    margin-top: 12px;
 
-    font-size: 24px;
+    font-size: 20px;
 
     color: var(--soft);
 
@@ -284,9 +277,9 @@ body {
 
 .drop svg {
 
-    width: 14px;
+    width: 12px;
 
-    height: 14px;
+    height: 12px;
 
 }
 
@@ -300,7 +293,7 @@ body {
 
     align-items: center;
 
-    gap: 40px;
+    gap: 30px;
 
 }
 
@@ -312,9 +305,9 @@ body {
 
 .stay-icon svg {
 
-    width: 80px;
+    width: 60px;
 
-    height: 80px;
+    height: 60px;
 
 }
 
@@ -322,7 +315,7 @@ body {
 
     font-family: var(--serif);
 
-    font-size: 40px;
+    font-size: 32px;
 
     font-weight: 700;
 
@@ -332,21 +325,21 @@ body {
 
 .stay-until {
 
-    font-size: 30px;
+    font-size: 24px;
 
     color: var(--soft);
 
-    margin-top: 8px;
+    margin-top: 6px;
 
 }
 
 .stay-days {
 
-    font-size: 22px;
+    font-size: 18px;
 
     color: var(--soft);
 
-    margin-top: 20px;
+    margin-top: 14px;
 
     letter-spacing: 3px;
 
@@ -356,9 +349,9 @@ body {
 
 .stay-thanks {
 
-    font-size: 24px;
+    font-size: 20px;
 
-    margin-top: 16px;
+    margin-top: 12px;
 
 }
 
@@ -368,14 +361,19 @@ body {
 
     display: grid;
 
-    grid-template-columns:
+    grid-template-columns: repeat(3, 1fr);
 
-        repeat(
-            3,
-            1fr
-        );
+    gap: 24px;
 
-    gap: 30px;
+}
+
+.house-icon svg {
+
+    width: 34px;
+
+    height: 34px;
+
+    margin-bottom: 10px;
 
 }
 
@@ -387,14 +385,14 @@ body {
 
     color: var(--soft);
 
-    font-size: 18px;
+    font-size: 15px;
 
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .value {
 
-    font-size: 34px;
+    font-size: 28px;
 
     font-weight: 600;
 }
@@ -403,12 +401,12 @@ body {
 
 footer {
 
-    margin-top: 50px;
+    margin-top: 28px;
 
     text-align: right;
 
     color: var(--soft);
 
-    font-size: 22px;
+    font-size: 18px;
 
 }
