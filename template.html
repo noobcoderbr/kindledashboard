@@ -1,222 +1,206 @@
-function wmo(code) {
+<!doctype html>
+<html lang="pt-BR">
 
-    if (code === 0)
-        return {
-            label: "Céu limpo",
-            svg: ICONS.sun
-        };
+<head>
 
-    if (code === 1 || code === 2)
-        return {
-            label: "Parcialmente nublado",
-            svg: ICONS.cloud
-        };
+<meta charset="utf-8">
 
-    if (code === 3)
-        return {
-            label: "Nublado",
-            svg: ICONS.cloud
-        };
+<title>Kindle Concierge</title>
 
-    if (code >= 51 && code <= 67)
-        return {
-            label: "Chuva",
-            svg: ICONS.rain
-        };
+<link rel="stylesheet" href="styles.css">
 
-    if (code >= 80)
-        return {
-            label: "Tempestade",
-            svg: ICONS.storm
-        };
+</head>
 
-    return {
-        label: "Tempo variável",
-        svg: ICONS.cloud
-    };
+<body>
 
-}
+<header class="masthead">
 
-window.render = function (data) {
+    <div class="place" id="place">
 
-    const current = wmo(
-        data.weather.code
-    );
+        Botafogo, Rio de Janeiro
 
-    // Header
+    </div>
 
-    document.getElementById(
-        "place"
-    ).textContent =
-        data.city;
+    <div class="date" id="date">
 
-    document.getElementById(
-        "date"
-    ).textContent =
-        data.today;
+        —
 
-    // Hero
+    </div>
 
-    document.getElementById(
-        "heroIcon"
-    ).innerHTML =
-        current.svg;
+</header>
 
-    document.getElementById(
-        "temp"
-    ).textContent =
-        data.weather.temp;
+<section class="hero">
 
-    document.getElementById(
-        "cond"
-    ).textContent =
-        current.label;
+    <div class="welcome">
 
-    document.getElementById(
-        "sub"
-    ).innerHTML =
+        <div class="hello">
 
-        "Sensação " +
-        data.weather.feels +
-        "° • " +
+            Olá, hóspede.
 
-        data.weather.rainChance +
-        "% de chuva • Vento " +
+        </div>
 
-        data.weather.wind +
-        " km/h";
+        <div class="welcome-text">
 
-    // Forecast
+            Esperamos que tenha uma ótima estadia.
 
-    let forecastHtml = "";
+        </div>
 
-    data.weather.forecast.forEach(
+    </div>
 
-        f => {
+    <div class="hero-weather">
 
-            const icon =
-                wmo(
-                    f.code
-                );
+        <div class="hero-icon" id="heroIcon">
 
-            forecastHtml += `
+        </div>
 
-            <div class="fc">
+        <div class="hero-temp">
 
-                <div class="fc-day">
+            <span id="temp">
 
-                    ${f.label}
+                --
 
-                </div>
+            </span>
 
-                <div class="fc-icon">
+            <span class="deg">
 
-                    ${icon.svg}
+                °
 
-                </div>
+            </span>
 
-                <div class="fc-hi">
+        </div>
 
-                    ${f.max}°
+        <div class="hero-condition" id="cond">
 
-                </div>
+            —
 
-                <div class="fc-lo">
+        </div>
 
-                    ${f.min}°
+        <div class="hero-sub" id="sub">
 
-                </div>
+            —
 
-                <div class="fc-rain">
+        </div>
 
-                    ${ICONS.drop}
+    </div>
 
-                    <span>
+</section>
 
-                        ${f.pop}%
+<section class="card">
 
-                    </span>
+    <div class="eyebrow">
 
-                </div>
+        Próximos dias
+
+    </div>
+
+    <div
+        class="forecast-grid"
+        id="forecast">
+
+    </div>
+
+</section>
+
+<section class="card">
+
+    <div class="eyebrow">
+
+        Sua estadia
+
+    </div>
+
+    <div
+        class="stay-line"
+        id="stayLine">
+
+        —
+
+    </div>
+
+</section>
+
+<section class="card">
+
+    <div class="eyebrow">
+
+        Sua casa
+
+    </div>
+
+    <div class="house-grid">
+
+        <div class="house-item">
+
+            <div class="key">
+
+                Wi-Fi
 
             </div>
 
-            `;
+            <div
+                class="value"
+                id="wifi">
 
-        }
+                —
 
-    );
+            </div>
 
-    document.getElementById(
-        "forecast"
-    ).innerHTML =
-        forecastHtml;
+        </div>
 
-    // Stay
+        <div class="house-item">
 
-    if (
-        data.stay.occupied
-    ) {
+            <div class="key">
 
-        document.getElementById(
-            "stayLine"
-        ).innerHTML =
+                Senha
 
-            `
-            Check-out
+            </div>
 
-            <br><br>
+            <div
+                class="value"
+                id="password">
 
-            <strong>
+                —
 
-            ${data.stay.checkout}
+            </div>
 
-            </strong>
+        </div>
 
-            <br><br>
+        <div class="house-item">
 
-            Até ${data.house.checkoutTime}
-            `;
+            <div class="key">
 
-    }
+                Check-out
 
-    else {
+            </div>
 
-        document.getElementById(
-            "stayLine"
-        ).innerHTML =
+            <div
+                class="value"
+                id="checkoutTime">
 
-            data.house.welcome;
+                —
 
-    }
+            </div>
 
-    // House
+        </div>
 
-    document.getElementById(
-        "wifi"
-    ).textContent =
+    </div>
 
-        data.house.wifiName;
+</section>
 
-    document.getElementById(
-        "password"
-    ).textContent =
+<footer>
 
-        data.house.wifiPassword;
+    <div id="updated">
 
-    document.getElementById(
-        "checkoutTime"
-    ).textContent =
+        —
 
-        data.house.checkoutTime;
+    </div>
 
-    // Footer
+</footer>
 
-    document.getElementById(
-        "updated"
-    ).textContent =
+<script src="icons.js"></script>
 
-        "Atualizado às " +
-        data.updatedAt;
+<script src="dashboard.js"></script>
 
-};
+</body>
+
+</html>
