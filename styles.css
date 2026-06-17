@@ -83,11 +83,13 @@ body {
 
 .hero {
 
-    display: flex;
+    display: grid;
 
-    align-items: flex-start;
+    grid-template-columns: 240px 1fr auto;
 
-    gap: 60px;
+    align-items: center;
+
+    gap: 0 50px;
 
     margin-top: 60px;
 
@@ -97,10 +99,6 @@ body {
 
 .welcome {
 
-    flex: 0 0 260px;
-
-    padding-top: 30px;
-
     text-align: left;
 
 }
@@ -109,7 +107,7 @@ body {
 
     font-family: var(--serif);
 
-    font-size: 64px;
+    font-size: 52px;
 
     font-weight: 700;
 
@@ -119,11 +117,11 @@ body {
 
 .welcome-text {
 
-    font-size: 26px;
+    font-size: 24px;
 
     color: var(--soft);
 
-    margin-top: 16px;
+    margin-top: 14px;
 
     line-height: 1.5;
 
@@ -139,23 +137,9 @@ body {
 
 }
 
-.hero-weather {
-
-    flex: 1;
+.hero-center {
 
     text-align: center;
-
-}
-
-.hero-number {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 30px;
 
 }
 
