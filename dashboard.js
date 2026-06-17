@@ -68,12 +68,12 @@ window.render = function(data) {
     ).innerHTML =
         "Sensação " +
         data.weather.feels +
-        "° • Umidade " +
-        data.weather.humidity +
-        "% • Vento " +
+        "° • " +
+        data.weather.rainChance +
+        "% de chuva • Vento " +
         data.weather.wind +
         " km/h";
-
+    
     let forecastHtml = "";
 
     data.weather.forecast.forEach(
