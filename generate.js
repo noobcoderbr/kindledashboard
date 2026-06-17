@@ -1,4 +1,5 @@
 const fs = require('fs');
+const puppeteer = require('puppeteer');
 
 function diaSemana(data) {
 
@@ -16,39 +17,125 @@ function diaSemana(data) {
         new Date(data).getDay()
     ];
 }
-const puppeteer = require('puppeteer');
+
+function traduzClima(code) {
+
+    if (code === 0) {
+        return 'Ensolarado';
+    }
+
+    if (code === 1 || code === 2) {
+        return 'Parcialmente nublado';
+    }
+
+    if (code === 3) {
+        return 'Nublado';
+    }
+
+    if (code >= 51 && code <= 67) {
+        return 'Chuva';
+    }
+
+    if (code >= 80 && code <= 99) {
+        return 'Tempestade';
+    }
+
+    return 'Tempo variável';
+}
 
 async function run() {
 
     const response = await fetch(
-        'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=4' 
+        'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=4'
     );
 
     const data = await response.json();
 
     const temperatura =
-        Math.round(data.current.temperature_2m);
+        Math.round(
+            data.current.temperature_2m
+        );
 
     const maxHoje =
         Math.round(
             data.daily.temperature_2m_max[0]
-    );
+        );
 
     const minHoje =
         Math.round(
             data.daily.temperature_2m_min[0]
-    );
+        );
 
-    let clima = 'Tempo variável';
+    const clima =
+        traduzClima(
+            data.current.weather_code
+        );
 
-    if (data.current.weather_code === 0) {
-        clima = 'Ensolarado';
+    const hoje = new Date();
+
+    const dataAtual =
+        hoje.toLocaleDateString(
+            'pt-BR',
+            {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            }
+        );
+
+    let forecastHtml = '';
+
+    for (let i = 1; i <= 3; i++) {
+
+        const dia =
+            ['DOM','SEG','TER','QUA','QUI','SEX','SAB']
+            [
+                new Date(
+                    data.daily.time[i]
+                ).getDay()
+            ];
+
+        const max =
+            Math.round(
+                data.daily.temperature_2m_max[i]
+            );
+
+        const min =
+            Math.round(
+                data.daily.temperature_2m_min[i]
+            );
+
+        forecastHtml += `
+            <div class="forecast-row">
+                ${dia} — ${max}° / ${min}°
+            </div>
+        `;
     }
 
     let html =
         fs.readFileSync(
             'template.html',
             'utf8'
+        );
+
+    html =
+        html.replace(
+            '{{DAY}}',
+            diaSemana(
+                new Date()
+            )
+        );
+
+    html =
+        html.replace(
+            '{{DATE}}',
+            dataAtual
+        );
+
+    html =
+        html.replace(
+            '{{MESSAGE}}',
+            `Hoje o tempo está ${clima.toLowerCase()}.`
         );
 
     html =
@@ -64,83 +151,23 @@ async function run() {
         );
 
     html =
-    html.replace(
-        '{{DAY}}',
-        diaSemana(
-            new Date()
-        )
-    );
-
-html =
-    html.replace(
-        '{{DATE}}',
-        dataAtual
-    );
-
-html =
-    html.replace(
-        '{{MESSAGE}}',
-        `Hoje o tempo está ${clima.toLowerCase()}.`
-    );
-
-html =
-    html.replace(
-        '{{MAX}}',
-        maxHoje
-    );
-
-html =
-    html.replace(
-        '{{MIN}}',
-        minHoje
-    );
-
-html =
-    html.replace(
-        '{{FORECAST}}',
-        forecastHtml
-    );
-    
-const hoje = new Date();
-
-const dataAtual =
-    hoje.toLocaleDateString(
-        'pt-BR',
-        {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        }
-    );
-
-let forecastHtml = '';
-
-for (let i = 1; i <= 3; i++) {
-
-    const dia =
-        ['DOM','SEG','TER','QUA','QUI','SEX','SAB']
-        [
-            new Date(
-                data.daily.time[i]
-            ).getDay()
-        ];
-
-    const max =
-        Math.round(
-            data.daily.temperature_2m_max[i]
+        html.replace(
+            '{{MAX}}',
+            maxHoje
         );
 
-    const min =
-        Math.round(
-            data.daily.temperature_2m_min[i]
+    html =
+        html.replace(
+            '{{MIN}}',
+            minHoje
         );
 
-    forecastHtml += `
-        <div class="forecast-row">
-            ${dia} — ${max}° / ${min}°
-        </div>
-    `;
-}
+    html =
+        html.replace(
+            '{{FORECAST}}',
+            forecastHtml
+        );
+
     fs.writeFileSync(
         'index.html',
         html
