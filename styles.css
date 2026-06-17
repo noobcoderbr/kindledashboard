@@ -83,11 +83,67 @@ body {
 
 .hero {
 
-    text-align: center;
+    display: flex;
+
+    align-items: center;
+
+    gap: 60px;
 
     margin-top: 80px;
 
     margin-bottom: 80px;
+
+}
+
+.welcome {
+
+    flex: 0 0 auto;
+
+    text-align: left;
+
+}
+
+.hello {
+
+    font-family: var(--serif);
+
+    font-size: 64px;
+
+    font-weight: 700;
+
+    line-height: 1.1;
+
+}
+
+.welcome-text {
+
+    font-size: 26px;
+
+    color: var(--soft);
+
+    margin-top: 16px;
+
+    line-height: 1.5;
+
+}
+
+.hero-weather {
+
+    flex: 1;
+
+    text-align: center;
+
+}
+
+.hero-number {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 40px;
 
 }
 
