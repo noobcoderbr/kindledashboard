@@ -129,6 +129,16 @@ body {
 
 }
 
+.welcome-dash {
+
+    margin-top: 24px;
+
+    font-size: 28px;
+
+    color: var(--ink);
+
+}
+
 .hero-weather {
 
     flex: 1;
