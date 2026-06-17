@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 
 <head>
-
-<meta charset="UTF-8">
+<meta charset="utf-8">
+<title>Kindle Concierge</title>
 
 <link rel="stylesheet" href="styles.css">
 
@@ -11,85 +11,128 @@
 
 <body>
 
-<div class="top">
+<header class="masthead">
 
-    <div class="weekday">
-        {{DAY}}
+    <div class="place" id="place">
+        Botafogo, Rio de Janeiro
     </div>
 
-    <div class="date">
-        {{DATE}}
+    <div class="date" id="date">
+        —
     </div>
 
-</div>
+</header>
 
-<div class="line"></div>
+<section class="hero">
 
-<div class="greeting">
+    <div class="hero-temp">
 
-    <div class="hello">
-        Olá, hóspede.
-    </div>
-
-    <div class="message">
-        {{MESSAGE}}
-    </div>
-
-</div>
-
-<div class="card">
-
-    <div class="card-title">
-        CLIMA AGORA
-    </div>
-
-    <div class="temperature">
-        {{TEMP}}
-    </div>
-
-    <div class="condition">
-        {{CONDITION}}
-    </div>
-
-    <div class="minmax">
-
-        Máx {{MAX}}°
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        Min {{MIN}}°
+        <span id="temp">--</span>
+        <span class="deg">°</span>
 
     </div>
 
-</div>
-
-<div class="card">
-
-    <div class="card-title">
-        PRÓXIMOS 3 DIAS
+    <div class="hero-condition" id="cond">
+        —
     </div>
 
-    {{FORECAST}}
-
-</div>
-
-<div class="card">
-
-    <div class="card-title">
-        SUA ESTADIA
+    <div class="hero-sub" id="sub">
+        —
     </div>
 
-    Em breve
+</section>
 
-</div>
+<section class="card">
 
-<div class="card">
+    <div class="eyebrow">
 
-    <div class="card-title">
-        EVENTOS PRÓXIMOS
+        Próximos dias
+
     </div>
 
-    Versão 2
+    <div class="forecast" id="forecast">
 
-</div>
+    </div>
+
+</section>
+
+<section class="card">
+
+    <div class="eyebrow">
+
+        Sua estadia
+
+    </div>
+
+    <div class="stay-line" id="stayLine">
+
+        —
+
+    </div>
+
+</section>
+
+<section class="card">
+
+    <div class="eyebrow">
+
+        Sua casa
+
+    </div>
+
+    <div class="house-grid">
+
+        <div class="house-item">
+
+            <div class="key">
+                Wi-Fi
+            </div>
+
+            <div class="value" id="wifi">
+                —
+            </div>
+
+        </div>
+
+        <div class="house-item">
+
+            <div class="key">
+                Senha
+            </div>
+
+            <div class="value" id="password">
+                —
+            </div>
+
+        </div>
+
+        <div class="house-item">
+
+            <div class="key">
+                Check-out
+            </div>
+
+            <div class="value" id="checkoutTime">
+                —
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+
+    <div id="updated">
+
+        —
+
+    </div>
+
+</footer>
+
+<script src="dashboard.js"></script>
 
 </body>
 </html>
