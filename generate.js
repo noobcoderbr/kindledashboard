@@ -97,10 +97,15 @@ async function run() {
 
                 const msPerDay = 1000 * 60 * 60 * 24;
 
-                // find the next upcoming booking
+                const allEvents = Object.values(events).filter(ev => ev.type === 'VEVENT');
+                console.log('iCal total VEVENTs:', allEvents.length);
+                allEvents.forEach(ev => {
+                    const s = new Date(ev.start); s.setHours(0,0,0,0);
+                    console.log(' -', ev.summary || '(no summary)', 'start:', s.toISOString(), 'after today:', s > today);
+                });
+
                 let nextStart = null;
-                for (const ev of Object.values(events)) {
-                    if (ev.type !== 'VEVENT') continue;
+                for (const ev of allEvents) {
                     const start = new Date(ev.start);
                     start.setHours(0, 0, 0, 0);
                     if (start > today) {
@@ -111,6 +116,8 @@ async function run() {
                 const daysUntilNext = nextStart
                     ? Math.ceil((nextStart - today) / msPerDay)
                     : null;
+
+                console.log('nextStart:', nextStart, 'daysUntilNext:', daysUntilNext);
 
                 return { occupied: false, checkout: null, daysLeft: null, daysUntilNext };
             }
