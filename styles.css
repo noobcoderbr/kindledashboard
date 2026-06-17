@@ -155,12 +155,11 @@ body {
 
 /* FORECAST */
 
-.forecast {
+.forecast-grid {
 
     display: grid;
 
     grid-template-columns:
-
         repeat(
             4,
             1fr
@@ -178,36 +177,66 @@ body {
 
 .fc-day {
 
-    font-size: 22px;
+    font-size: 20px;
 
-    text-transform: uppercase;
+    letter-spacing: 3px;
 
     color: var(--soft);
 
-    margin-bottom: 15px;
+    margin-bottom: 25px;
+
 }
 
 .fc-icon {
 
-    font-size: 44px;
+    font-size: 48px;
 
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+
 }
 
 .fc-hi {
 
-    font-size: 42px;
+    font-size: 48px;
 
     font-weight: 700;
 
     line-height: 1.1;
+
 }
 
 .fc-lo {
 
-    font-size: 30px;
+    font-size: 34px;
 
     color: var(--soft);
+
+    margin-top: 8px;
+
+}
+
+.fc-rain {
+
+    margin-top: 20px;
+
+    font-size: 24px;
+
+    color: var(--soft);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 6px;
+
+}
+
+.drop {
+
+    font-size: 18px;
+
 }
 
 /* STAY */
