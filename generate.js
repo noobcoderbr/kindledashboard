@@ -1,16 +1,4 @@
-const fs = require('fs');
 const puppeteer = require('puppeteer');
-
-function traduzClima(code) {
-
-    if (code === 0) return 'Céu limpo';
-    if (code === 1 || code === 2) return 'Parcial. nublado';
-    if (code === 3) return 'Nublado';
-    if (code >= 51 && code <= 67) return 'Chuva';
-    if (code >= 80) return 'Tempestade';
-
-    return '—';
-}
 
 async function run() {
 
@@ -94,12 +82,13 @@ async function run() {
 
     };
 
+    const labels = ['Hoje', 'Qui', 'Sex', 'Sab'];
+
     for (let i = 0; i < 4; i++) {
 
         data.weather.forecast.push({
 
-            label:
-                ['Hoje','Qua','Qui','Sex'][i],
+            label: labels[i],
 
             max:
                 Math.round(
@@ -121,18 +110,18 @@ async function run() {
 
     }
 
-    const html =
-        fs.readFileSync(
-            'template.html',
-            'utf8'
-        );
-
     const browser =
         await puppeteer.launch({
 
             headless: true,
 
-            args: ['--no-sandbox']
+            args: [
+
+                '--no-sandbox',
+
+                '--allow-file-access-from-files'
+
+            ]
 
         });
 
@@ -147,20 +136,30 @@ async function run() {
 
     });
 
-    await page.setContent(
-        html,
+    await page.goto(
+
+        'file://' +
+        process.cwd() +
+        '/template.html',
+
         {
+
             waitUntil: 'networkidle0'
+
         }
+
     );
 
     await page.evaluate(
+
         (data) => {
 
             window.render(data);
 
         },
+
         data
+
     );
 
     await page.screenshot({
