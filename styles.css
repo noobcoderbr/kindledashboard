@@ -1,3 +1,38 @@
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-weight: 400;
+    font-style: normal;
+    src: url('fonts/cg-400.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-weight: 700;
+    font-style: normal;
+    src: url('fonts/cg-700.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-weight: 300;
+    font-style: normal;
+    src: url('fonts/lato-300.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-weight: 400;
+    font-style: normal;
+    src: url('fonts/lato-400.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-weight: 700;
+    font-style: normal;
+    src: url('fonts/lato-700.woff2') format('woff2');
+}
+
 :root {
 
     --ink: #111;
@@ -6,13 +41,13 @@
     --line: #ccc;
 
     --serif:
+        'Cormorant Garamond',
         Georgia,
-        "DejaVu Serif",
         serif;
 
     --sans:
+        'Lato',
         Arial,
-        "DejaVu Sans",
         sans-serif;
 }
 
