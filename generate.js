@@ -1,44 +1,73 @@
 const fs = require('fs');
-const { createCanvas } = require('canvas');
+const puppeteer = require('puppeteer');
 
-const width = 1072;
-const height = 1448;
+async function run() {
 
-const canvas = createCanvas(width, height);
-const ctx = canvas.getContext('2d');
+    const response = await fetch(
+        'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,weather_code'
+    );
 
-ctx.fillStyle = 'white';
-ctx.fillRect(0, 0, width, height);
+    const data = await response.json();
 
-ctx.fillStyle = 'black';
+    const temperatura =
+        Math.round(data.current.temperature_2m);
 
-ctx.font = 'bold 64px Arial';
+    let clima = 'Tempo variável';
 
-ctx.fillText(
-    'CONCIERGE',
-    80,
-    120
-);
+    if (data.current.weather_code === 0) {
+        clima = 'Ensolarado';
+    }
 
-ctx.font = '40px Arial';
+    let html =
+        fs.readFileSync(
+            'template.html',
+            'utf8'
+        );
 
-ctx.fillText(
-    'Olá, hóspede.',
-    80,
-    250
-);
+    html =
+        html.replace(
+            '{{TEMP}}',
+            `${temperatura}°`
+        );
 
-ctx.fillText(
-    new Date().toLocaleString('pt-BR'),
-    80,
-    320
-);
+    html =
+        html.replace(
+            '{{CONDITION}}',
+            clima
+        );
 
-const buffer = canvas.toBuffer('image/png');
+    fs.writeFileSync(
+        'index.html',
+        html
+    );
 
-fs.writeFileSync(
-    'concierge.png',
-    buffer
-);
+    const browser =
+        await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox']
+        });
 
-console.log('Imagem criada');
+    const page =
+        await browser.newPage();
+
+    await page.setViewport({
+        width: 1072,
+        height: 1448
+    });
+
+    await page.goto(
+        'file://' +
+        process.cwd() +
+        '/index.html'
+    );
+
+    await page.screenshot({
+        path: 'concierge.png'
+    });
+
+    await browser.close();
+
+    console.log('PNG criado');
+}
+
+run();
