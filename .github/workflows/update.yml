@@ -1,4 +1,4 @@
-name: Update Time
+name: Update Concierge
 
 on:
   schedule:
@@ -16,24 +16,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Update page
-        run: |
-          echo "<!DOCTYPE html>
-          <html>
-          <body>
-          <h1>Meu Kindle Dashboard</h1>
-          <p>Última atualização:</p>
-          <p>$(date)</p>
-          </body>
-          </html>" > index.html
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate page
+        run: node generate.js
 
       - name: Commit changes
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
 
-          git add index.html
+          git add .
 
-          git commit -m "Update time" || exit 0
+          git commit -m "Update concierge" || exit 0
 
           git push
