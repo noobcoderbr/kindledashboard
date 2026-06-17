@@ -198,15 +198,9 @@ window.render = function(data) {
 
     }
 
-    document.getElementById("iconWifi").innerHTML   = ICONS.wifi;
-    document.getElementById("iconLock").innerHTML   = ICONS.lock;
-    document.getElementById("iconClock").innerHTML  = ICONS.clock;
-
-    document.getElementById("wifi").textContent         = data.house.wifiName;
-    document.getElementById("password").textContent     = data.house.wifiPassword;
+    document.getElementById("wifiQr").innerHTML    = data.wifi.qr;
+    document.getElementById("wifiName").textContent = data.wifi.name;
     document.getElementById("checkoutTime").textContent = data.house.checkoutTime;
-
-    document.getElementById("whatsappIcon").innerHTML = ICONS.whatsapp;
 
     if (data.whatsapp.hasPhone) {
 
@@ -214,7 +208,7 @@ window.render = function(data) {
 
     } else {
 
-        document.getElementById("whatsappGrid").style.display = "none";
+        document.getElementById("whatsappCol").style.display = "none";
 
     }
 

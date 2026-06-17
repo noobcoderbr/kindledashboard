@@ -361,85 +361,67 @@ body {
 
 }
 
-.house-icon svg {
+/* QR DUO */
 
-    width: 34px;
-
-    height: 34px;
-
-    margin-bottom: 10px;
-
-}
-
-.key {
-
-    text-transform: uppercase;
-
-    letter-spacing: 3px;
-
-    color: var(--soft);
-
-    font-size: 15px;
-
-    margin-bottom: 8px;
-}
-
-.value {
-
-    font-size: 28px;
-
-    font-weight: 600;
-}
-
-/* WHATSAPP */
-
-.whatsapp-grid {
+.qr-duo-grid {
 
     display: grid;
 
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr 1px 1fr;
+
+    gap: 0 40px;
 
     align-items: center;
 
-    gap: 32px;
+}
+
+.qr-divider {
+
+    background: var(--line);
+
+    align-self: stretch;
 
 }
 
-.whatsapp-icon svg {
+.qr-col {
 
-    width: 50px;
+    display: flex;
 
-    height: 50px;
+    flex-direction: column;
 
-}
+    align-items: center;
 
-.whatsapp-title {
-
-    font-family: var(--serif);
-
-    font-size: 28px;
-
-    font-weight: 700;
-
-    margin-bottom: 8px;
+    text-align: center;
 
 }
 
-.whatsapp-sub {
+.qr-code svg {
 
-    font-size: 20px;
+    width: 160px;
+
+    height: 160px;
+
+    display: block;
+
+}
+
+.qr-label {
+
+    font-size: 22px;
+
+    font-weight: 600;
+
+    margin-top: 14px;
+
+}
+
+.qr-sub {
+
+    font-size: 18px;
 
     color: var(--soft);
 
-    line-height: 1.4;
-
-}
-
-.whatsapp-qr svg {
-
-    width: 140px;
-
-    height: 140px;
+    margin-top: 4px;
 
 }
 
