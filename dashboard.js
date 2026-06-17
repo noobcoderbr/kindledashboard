@@ -202,12 +202,7 @@ window.render = function(data) {
     document.getElementById("wifiQr").innerHTML   = data.wifi.qr;
 
     document.getElementById("whatsappIcon").innerHTML = ICONS.whatsapp;
-
-    if (data.whatsapp.hasPhone) {
-
-        document.getElementById("whatsappQr").innerHTML = data.whatsapp.qr;
-
-    }
+    document.getElementById("whatsappQr").innerHTML   = data.whatsapp.qr;
 
     document.getElementById(
         "updated"
