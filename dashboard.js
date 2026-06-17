@@ -208,23 +208,13 @@ window.render = function(data) {
 
     }
 
-    document.getElementById(
-        "wifi"
-    ).textContent =
+    document.getElementById("iconWifi").innerHTML   = ICONS.wifi;
+    document.getElementById("iconLock").innerHTML   = ICONS.lock;
+    document.getElementById("iconClock").innerHTML  = ICONS.clock;
 
-        data.house.wifiName;
-
-    document.getElementById(
-        "password"
-    ).textContent =
-
-        data.house.wifiPassword;
-
-    document.getElementById(
-        "checkoutTime"
-    ).textContent =
-
-        data.house.checkoutTime;
+    document.getElementById("wifi").textContent         = data.house.wifiName;
+    document.getElementById("password").textContent     = data.house.wifiPassword;
+    document.getElementById("checkoutTime").textContent = data.house.checkoutTime;
 
     document.getElementById(
         "updated"
