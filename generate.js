@@ -4,13 +4,23 @@ const puppeteer = require('puppeteer');
 async function run() {
 
     const response = await fetch(
-        'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,weather_code'
+        'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=4' 
     );
 
     const data = await response.json();
 
     const temperatura =
         Math.round(data.current.temperature_2m);
+
+    const maxHoje =
+        Math.round(
+            data.daily.temperature_2m_max[0]
+    );
+
+    const minHoje =
+        Math.round(
+            data.daily.temperature_2m_min[0]
+    );
 
     let clima = 'Tempo variável';
 
