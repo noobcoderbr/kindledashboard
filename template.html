@@ -1,53 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
 
-<style>
+<link rel="stylesheet" href="styles.css">
 
-body {
-    width: 1072px;
-    height: 1448px;
-
-    margin: 0;
-    padding: 80px;
-
-    box-sizing: border-box;
-
-    background: white;
-    color: black;
-
-    font-family: Georgia, serif;
-}
-
-h1 {
-    font-size: 72px;
-    margin-bottom: 40px;
-}
-
-.temp {
-    font-size: 180px;
-    font-weight: bold;
-}
-
-.condition {
-    font-size: 48px;
-}
-
-</style>
 </head>
 
 <body>
 
-<h1>Olá, hóspede.</h1>
+<div class="header">
+{{DAY}}
+</div>
 
-<div class="temp">
+<div class="date">
+{{DATE}}
+</div>
+
+<div class="greeting">
+Olá, hóspede.
+</div>
+
+<div class="message">
+{{MESSAGE}}
+</div>
+
+<div class="temperature">
 {{TEMP}}
 </div>
 
 <div class="condition">
 {{CONDITION}}
 </div>
+
+<div class="minmax">
+Máx {{MAX}}° &nbsp;&nbsp;&nbsp;
+Min {{MIN}}°
+</div>
+
+<div class="forecast-title">
+Próximos 3 dias
+</div>
+
+{{FORECAST}}
 
 </body>
 
