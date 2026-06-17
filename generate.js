@@ -220,6 +220,8 @@ async function run() {
 
     );
 
+    await page.evaluate(() => document.fonts.ready);
+
     await page.evaluate(
 
         (data) => {
