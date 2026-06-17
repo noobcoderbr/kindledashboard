@@ -20,7 +20,10 @@ jobs:
         with:
           node-version: 22
 
-      - name: Generate page
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Generate image
         run: node generate.js
 
       - name: Commit changes
