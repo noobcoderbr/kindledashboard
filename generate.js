@@ -36,7 +36,8 @@ async function run() {
             {
                 weekday: 'long',
                 day: 'numeric',
-                month: 'long'
+                month: 'long',
+                timeZone: 'America/Sao_Paulo'
             }
         ),
 
@@ -44,7 +45,8 @@ async function run() {
             'pt-BR',
             {
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
+                timeZone: 'America/Sao_Paulo'
             }
         ),
 
@@ -76,8 +78,9 @@ async function run() {
                 return { occupied: false, checkout: null, daysLeft: null, daysUntilNext: null };
             }
 
-            const today = new Date(now);
-            today.setHours(0, 0, 0, 0);
+            // midnight of today in BRT, as UTC timestamp (matches date-only iCal events)
+            const brtDateStr = now.toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
+            const today = new Date(brtDateStr + 'T00:00:00Z');
 
             let current = null;
 
@@ -129,7 +132,7 @@ async function run() {
             const daysLeft = Math.ceil((checkoutDate - today) / msPerDay);
 
             const checkoutFormatted = checkoutDate.toLocaleDateString('pt-BR', {
-                weekday: 'long', day: 'numeric', month: 'long'
+                weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Sao_Paulo'
             });
 
             return { occupied: true, checkout: checkoutFormatted, daysLeft };
