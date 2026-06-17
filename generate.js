@@ -1,128 +1,44 @@
 const fs = require('fs');
+const { createCanvas } = require('canvas');
 
-function traduzClima(code) {
-    const mapa = {
-        0: '☀️ Ensolarado',
-        1: '🌤️ Predominantemente ensolarado',
-        2: '⛅ Parcialmente nublado',
-        3: '☁️ Nublado',
-        45: '🌫️ Neblina',
-        48: '🌫️ Neblina',
-        51: '🌦️ Garoa',
-        61: '🌧️ Chuva',
-        63: '🌧️ Chuva moderada',
-        65: '🌧️ Chuva forte',
-        71: '❄️ Neve',
-        80: '🌦️ Pancadas de chuva',
-        95: '⛈️ Tempestade'
-    };
+const width = 1072;
+const height = 1448;
 
-    return mapa[code] || '🌤️ Tempo variável';
-}
+const canvas = createCanvas(width, height);
+const ctx = canvas.getContext('2d');
 
-function diaSemana(data) {
-    const dias = [
-        'DOM',
-        'SEG',
-        'TER',
-        'QUA',
-        'QUI',
-        'SEX',
-        'SAB'
-    ];
+ctx.fillStyle = 'white';
+ctx.fillRect(0, 0, width, height);
 
-    return dias[new Date(data).getDay()];
-}
+ctx.fillStyle = 'black';
 
-async function run() {
+ctx.font = 'bold 64px Arial';
 
-    const response = await fetch(
-        'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=4'
-    );
+ctx.fillText(
+    'CONCIERGE',
+    80,
+    120
+);
 
-    const data = await response.json();
+ctx.font = '40px Arial';
 
-    const temperaturaAtual =
-        Math.round(data.current.temperature_2m);
+ctx.fillText(
+    'Olá, hóspede.',
+    80,
+    250
+);
 
-    const clima =
-        traduzClima(data.current.weather_code);
+ctx.fillText(
+    new Date().toLocaleString('pt-BR'),
+    80,
+    320
+);
 
-    const maxHoje =
-        Math.round(data.daily.temperature_2m_max[0]);
+const buffer = canvas.toBuffer('image/png');
 
-    const minHoje =
-        Math.round(data.daily.temperature_2m_min[0]);
+fs.writeFileSync(
+    'concierge.png',
+    buffer
+);
 
-    let proximosDias = '';
-
-    for (let i = 1; i <= 3; i++) {
-
-        const dia =
-            diaSemana(data.daily.time[i]);
-
-        const max =
-            Math.round(data.daily.temperature_2m_max[i]);
-
-        const min =
-            Math.round(data.daily.temperature_2m_min[i]);
-
-        const codigoClima =
-            data.daily.weather_code[i];
-
-        const climaDia =
-            traduzClima(codigoClima);
-        
-        proximosDias += `
-            <li>
-                ${dia}
-                <br>
-                ${climaDia}
-            <br>
-                ${max}° / ${min}°
-            </li>
-        `;
-    }
-
-    const html = `
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-<head>
-<meta charset="UTF-8">
-<title>Kindle Concierge</title>
-</head>
-
-<body>
-
-<h1>Olá, hóspede.</h1>
-
-<h2>Clima agora</h2>
-
-<p><strong>${temperaturaAtual}°C</strong></p>
-
-<p>${clima}</p>
-
-<p>
-Máxima: ${maxHoje}°C
-<br>
-Mínima: ${minHoje}°C
-</p>
-
-<h2>Próximos 3 dias</h2>
-
-<ul>
-${proximosDias}
-</ul>
-
-</body>
-
-</html>
-`;
-
-    fs.writeFileSync('index.html', html);
-
-    console.log('Página criada.');
-}
-
-run();
+console.log('Imagem criada');
