@@ -65,7 +65,7 @@ async function run() {
             const icalUrl = process.env.AIRBNB_ICAL_URL;
 
             if (!icalUrl) {
-                return { occupied: false, checkout: null, daysLeft: null };
+                return { occupied: false, checkout: null, daysLeft: null, daysUntilNext: null };
             }
 
             let events;
@@ -73,7 +73,7 @@ async function run() {
                 events = await ical.async.fromURL(icalUrl);
             } catch (e) {
                 console.error('iCal fetch failed:', e.message);
-                return { occupied: false, checkout: null, daysLeft: null };
+                return { occupied: false, checkout: null, daysLeft: null, daysUntilNext: null };
             }
 
             const today = new Date(now);
@@ -94,7 +94,25 @@ async function run() {
             }
 
             if (!current) {
-                return { occupied: false, checkout: null, daysLeft: null };
+
+                const msPerDay = 1000 * 60 * 60 * 24;
+
+                // find the next upcoming booking
+                let nextStart = null;
+                for (const ev of Object.values(events)) {
+                    if (ev.type !== 'VEVENT') continue;
+                    const start = new Date(ev.start);
+                    start.setHours(0, 0, 0, 0);
+                    if (start > today) {
+                        if (!nextStart || start < nextStart) nextStart = start;
+                    }
+                }
+
+                const daysUntilNext = nextStart
+                    ? Math.ceil((nextStart - today) / msPerDay)
+                    : null;
+
+                return { occupied: false, checkout: null, daysLeft: null, daysUntilNext };
             }
 
             const checkoutDate = new Date(current.end);

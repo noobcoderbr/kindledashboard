@@ -75,10 +75,19 @@ window.render = function(data) {
 
     } else {
 
-        document.getElementById("stayIcon").style.display = "none";
-        document.getElementById("stayRight").style.display = "none";
+        document.getElementById("stayIcon").innerHTML = ICONS.luggage;
+
         document.getElementById("stayMain").innerHTML =
-            `<div class="stay-vacant-text">Apartamento disponível.</div>`;
+            `<div class="stay-eyebrow">APARTAMENTO DISPONÍVEL</div>`;
+
+        const next = data.stay.daysUntilNext;
+        if (next !== null && next !== undefined) {
+            const plural = next === 1 ? "dia" : "dias";
+            document.getElementById("stayRight").innerHTML =
+                `Próxima hospedagem<br><strong>em ${next} ${plural}</strong>`;
+        } else {
+            document.getElementById("stayRight").style.display = "none";
+        }
 
     }
 
