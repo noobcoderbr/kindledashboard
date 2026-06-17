@@ -1,205 +1,178 @@
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 
-function diaSemana(data) {
-
-    const dias = [
-        'DOMINGO',
-        'SEGUNDA-FEIRA',
-        'TERÇA-FEIRA',
-        'QUARTA-FEIRA',
-        'QUINTA-FEIRA',
-        'SEXTA-FEIRA',
-        'SÁBADO'
-    ];
-
-    return dias[
-        new Date(data).getDay()
-    ];
-}
-
 function traduzClima(code) {
 
-    if (code === 0) {
-        return 'Ensolarado';
-    }
+    if (code === 0) return 'Céu limpo';
+    if (code === 1 || code === 2) return 'Parcial. nublado';
+    if (code === 3) return 'Nublado';
+    if (code >= 51 && code <= 67) return 'Chuva';
+    if (code >= 80) return 'Tempestade';
 
-    if (code === 1 || code === 2) {
-        return 'Parcialmente nublado';
-    }
-
-    if (code === 3) {
-        return 'Nublado';
-    }
-
-    if (code >= 51 && code <= 67) {
-        return 'Chuva';
-    }
-
-    if (code >= 80 && code <= 99) {
-        return 'Tempestade';
-    }
-
-    return 'Tempo variável';
+    return '—';
 }
 
 async function run() {
 
     const response = await fetch(
-        'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=4'
+        'https://api.open-meteo.com/v1/forecast?latitude=-22.95&longitude=-43.18&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=4'
     );
 
-    const data = await response.json();
+    const meteo = await response.json();
 
-    const temperatura =
-        Math.round(
-            data.current.temperature_2m
-        );
+    const now = new Date();
 
-    const maxHoje =
-        Math.round(
-            data.daily.temperature_2m_max[0]
-        );
+    const data = {
 
-    const minHoje =
-        Math.round(
-            data.daily.temperature_2m_min[0]
-        );
+        city: "Botafogo, Rio de Janeiro",
 
-    const clima =
-        traduzClima(
-            data.current.weather_code
-        );
-
-    const hoje = new Date();
-
-    const dataAtual =
-        hoje.toLocaleDateString(
+        today: now.toLocaleDateString(
             'pt-BR',
             {
+                weekday: 'long',
                 day: 'numeric',
-                month: 'long',
-                year: 'numeric'
+                month: 'long'
             }
-        );
+        ),
 
-    let forecastHtml = '';
+        updatedAt: now.toLocaleTimeString(
+            'pt-BR',
+            {
+                hour: '2-digit',
+                minute: '2-digit'
+            }
+        ),
 
-    for (let i = 1; i <= 3; i++) {
+        house: {
 
-        const dia =
-            ['DOM','SEG','TER','QUA','QUI','SEX','SAB']
-            [
-                new Date(
-                    data.daily.time[i]
-                ).getDay()
-            ];
+            welcome: "Bem-vindo ao seu apê no Rio",
 
-        const max =
-            Math.round(
-                data.daily.temperature_2m_max[i]
-            );
+            wifiName: "APE_BOTAFOGO",
 
-        const min =
-            Math.round(
-                data.daily.temperature_2m_min[i]
-            );
+            wifiPassword: "rio2026",
 
-        forecastHtml += `
-            <div class="forecast-row">
-                ${dia} — ${max}° / ${min}°
-            </div>
-        `;
+            checkoutTime: "11h"
+
+        },
+
+        stay: {
+
+            occupied: false,
+
+            checkout: null,
+
+            nextCheckIn: null
+
+        },
+
+        weather: {
+
+            temp:
+                Math.round(
+                    meteo.current.temperature_2m
+                ),
+
+            feels:
+                Math.round(
+                    meteo.current.apparent_temperature
+                ),
+
+            humidity:
+                meteo.current.relative_humidity_2m,
+
+            wind:
+                Math.round(
+                    meteo.current.wind_speed_10m
+                ),
+
+            code:
+                meteo.current.weather_code,
+
+            forecast: []
+
+        }
+
+    };
+
+    for (let i = 0; i < 4; i++) {
+
+        data.weather.forecast.push({
+
+            label:
+                ['Hoje','Qua','Qui','Sex'][i],
+
+            max:
+                Math.round(
+                    meteo.daily.temperature_2m_max[i]
+                ),
+
+            min:
+                Math.round(
+                    meteo.daily.temperature_2m_min[i]
+                ),
+
+            code:
+                meteo.daily.weather_code[i],
+
+            pop:
+                meteo.daily.precipitation_probability_max[i]
+
+        });
+
     }
 
-    let html =
+    const html =
         fs.readFileSync(
             'template.html',
             'utf8'
         );
 
-    html =
-        html.replace(
-            '{{DAY}}',
-            diaSemana(
-                new Date()
-            )
-        );
-
-    html =
-        html.replace(
-            '{{DATE}}',
-            dataAtual
-        );
-
-    html =
-        html.replace(
-            '{{MESSAGE}}',
-            `Hoje o tempo está ${clima.toLowerCase()}.`
-        );
-
-    html =
-        html.replace(
-            '{{TEMP}}',
-            `${temperatura}°`
-        );
-
-    html =
-        html.replace(
-            '{{CONDITION}}',
-            clima
-        );
-
-    html =
-        html.replace(
-            '{{MAX}}',
-            maxHoje
-        );
-
-    html =
-        html.replace(
-            '{{MIN}}',
-            minHoje
-        );
-
-    html =
-        html.replace(
-            '{{FORECAST}}',
-            forecastHtml
-        );
-
-    fs.writeFileSync(
-        'index.html',
-        html
-    );
-
     const browser =
         await puppeteer.launch({
+
             headless: true,
+
             args: ['--no-sandbox']
+
         });
 
     const page =
         await browser.newPage();
 
     await page.setViewport({
+
         width: 1072,
+
         height: 1448
+
     });
 
-    await page.goto(
-        'file://' +
-        process.cwd() +
-        '/index.html'
+    await page.setContent(
+        html,
+        {
+            waitUntil: 'networkidle0'
+        }
+    );
+
+    await page.evaluate(
+        (data) => {
+
+            window.render(data);
+
+        },
+        data
     );
 
     await page.screenshot({
+
         path: 'concierge.png'
+
     });
 
     await browser.close();
 
     console.log('PNG criado');
+
 }
 
 run();
