@@ -113,6 +113,48 @@ A9 9 0 0 0 20 40
 </svg>
 `,
 
+luggage: `
+<svg viewBox="0 0 64 64"
+fill="none"
+stroke="#111"
+stroke-width="2.5">
+
+<rect x="14" y="22" width="36" height="30" rx="3"/>
+
+<path d="M24 22V16a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/>
+
+<line x1="32" y1="22" x2="32" y2="52"/>
+<line x1="14" y1="37" x2="50" y2="37"/>
+
+<line x1="18" y1="52" x2="18" y2="56"/>
+<line x1="46" y1="52" x2="46" y2="56"/>
+
+</svg>
+`,
+
+calendar: `
+<svg viewBox="0 0 64 64"
+fill="none"
+stroke="#111"
+stroke-width="2.5">
+
+<rect x="8" y="12" width="48" height="44" rx="3"/>
+
+<line x1="8" y1="26" x2="56" y2="26"/>
+
+<line x1="22" y1="8" x2="22" y2="18"/>
+<line x1="42" y1="8" x2="42" y2="18"/>
+
+<circle cx="22" cy="36" r="2" fill="#111" stroke="none"/>
+<circle cx="32" cy="36" r="2" fill="#111" stroke="none"/>
+<circle cx="42" cy="36" r="2" fill="#111" stroke="none"/>
+
+<circle cx="22" cy="46" r="2" fill="#111" stroke="none"/>
+<circle cx="32" cy="46" r="2" fill="#111" stroke="none"/>
+
+</svg>
+`,
+
 drop: `
 <svg viewBox="0 0 24 24"
 fill="none"

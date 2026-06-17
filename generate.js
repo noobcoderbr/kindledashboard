@@ -43,15 +43,47 @@ async function run() {
 
         },
 
-        stay: {
+        stay: (() => {
 
-            occupied: false,
+            const occupied = true;
 
-            checkout: null,
+            if (!occupied) {
 
-            nextCheckIn: null
+                return {
+                    occupied: false,
+                    checkout: null,
+                    daysLeft: null,
+                    nextCheckIn: null
+                };
 
-        },
+            }
+
+            const checkoutDate = new Date(now);
+            checkoutDate.setDate(now.getDate() + 1);
+
+            const msPerDay = 1000 * 60 * 60 * 24;
+            const daysLeft = Math.ceil(
+                (checkoutDate - now) / msPerDay
+            );
+
+            const checkoutFormatted =
+                checkoutDate.toLocaleDateString(
+                    'pt-BR',
+                    {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long'
+                    }
+                );
+
+            return {
+                occupied: true,
+                checkout: checkoutFormatted,
+                daysLeft,
+                nextCheckIn: null
+            };
+
+        })(),
 
         weather: {
 

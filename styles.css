@@ -313,13 +313,74 @@ body {
 
 /* STAY */
 
-.stay-line {
+.stay-grid {
+
+    display: grid;
+
+    grid-template-columns: auto 1fr auto;
+
+    align-items: center;
+
+    gap: 40px;
+
+}
+
+.stay-vacant {
+
+    grid-template-columns: 1fr;
+
+}
+
+.stay-icon svg {
+
+    width: 80px;
+
+    height: 80px;
+
+}
+
+.stay-checkout {
 
     font-family: var(--serif);
 
     font-size: 40px;
 
-    line-height: 1.5;
+    font-weight: 700;
+
+    line-height: 1.2;
+
+}
+
+.stay-until {
+
+    font-size: 30px;
+
+    color: var(--soft);
+
+    margin-top: 8px;
+
+}
+
+.stay-days {
+
+    font-size: 22px;
+
+    color: var(--soft);
+
+    margin-top: 20px;
+
+    letter-spacing: 3px;
+
+    text-transform: uppercase;
+
+}
+
+.stay-thanks {
+
+    font-size: 24px;
+
+    margin-top: 16px;
+
 }
 
 /* HOUSE */

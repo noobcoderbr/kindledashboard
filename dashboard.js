@@ -143,39 +143,68 @@ window.render = function(data) {
     ).innerHTML =
         forecastHtml;
 
-    if (
-        data.stay.occupied
-    ) {
+    if (data.stay.occupied) {
+
+        const days = data.stay.daysLeft;
+
+        const daysLabel =
+            days === 1
+                ? "1 dia restante"
+                : days + " dias restantes";
 
         document.getElementById(
-            "stayLine"
-        ).innerHTML =
-
-            `
-            Check-out
-
-            <br><br>
-
-            <b>
-
-            ${data.stay.checkout}
-
-            </b>
-
-            <br><br>
-
-            Até ${data.house.checkoutTime}
-            `;
-
-    }
-
-    else {
+            "stayIconLeft"
+        ).innerHTML = ICONS.luggage;
 
         document.getElementById(
-            "stayLine"
+            "stayIconRight"
+        ).innerHTML = ICONS.calendar;
+
+        document.getElementById(
+            "stayContent"
         ).innerHTML =
 
-            data.house.welcome;
+            `<div class="stay-checkout">
+
+                Check-out ${data.stay.checkout}
+
+            </div>
+
+            <div class="stay-until">
+
+                Até ${data.house.checkoutTime}
+
+            </div>
+
+            <div class="stay-days">
+
+                ${daysLabel}
+
+            </div>
+
+            <div class="stay-thanks">
+
+                Agradecemos por escolher nosso apê.
+
+            </div>`;
+
+    } else {
+
+        document.getElementById(
+            "stayGrid"
+        ).classList.add(
+            "stay-vacant"
+        );
+
+        document.getElementById(
+            "stayContent"
+        ).innerHTML =
+
+            `<div class="stay-checkout">
+
+                Apartamento disponível.
+
+            </div>`;
 
     }
 
