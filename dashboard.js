@@ -3,36 +3,36 @@ function wmo(code) {
     if (code === 0)
         return {
             label: "Céu limpo",
-            icon: "☀"
+            iconKey: "sun"
         };
 
     if (code === 1 || code === 2)
         return {
             label: "Parcialmente nublado",
-            icon: "☁"
+            iconKey: "partlyCloudy"
         };
 
     if (code === 3)
         return {
             label: "Nublado",
-            icon: "☁"
+            iconKey: "cloud"
         };
 
     if (code >= 51 && code <= 67)
         return {
             label: "Chuva",
-            icon: "🌧"
+            iconKey: "rain"
         };
 
     if (code >= 80)
         return {
             label: "Tempestade",
-            icon: "⛈"
+            iconKey: "storm"
         };
 
     return {
         label: "Tempo variável",
-        icon: "☁"
+        iconKey: "cloud"
     };
 
 }
@@ -54,6 +54,11 @@ window.render = function(data) {
         data.today;
 
     document.getElementById(
+        "heroIcon"
+    ).innerHTML =
+        ICONS[current.iconKey];
+
+    document.getElementById(
         "temp"
     ).textContent =
         data.weather.temp;
@@ -68,12 +73,12 @@ window.render = function(data) {
     ).innerHTML =
         "Sensação " +
         data.weather.feels +
-        "° • " +
-        data.weather.rainChance +
-        "% de chuva • Vento " +
+        "° • Umidade " +
+        data.weather.humidity +
+        "% • Vento " +
         data.weather.wind +
         " km/h";
-    
+
     let forecastHtml = "";
 
     data.weather.forecast.forEach(
@@ -97,7 +102,7 @@ window.render = function(data) {
 
     <div class="fc-icon">
 
-        ${icon.icon}
+        ${ICONS[icon.iconKey]}
 
     </div>
 
@@ -117,7 +122,7 @@ window.render = function(data) {
 
         <span class="drop">
 
-            💧
+            ${ICONS.drop}
 
         </span>
 
