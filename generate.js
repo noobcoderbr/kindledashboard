@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const QRCode = require('qrcode');
+const ical = require('node-ical');
 
 async function run() {
 
@@ -60,45 +61,54 @@ async function run() {
 
         },
 
-        stay: (() => {
+        stay: await (async () => {
 
-            const occupied = true;
+            const icalUrl = process.env.AIRBNB_ICAL_URL;
 
-            if (!occupied) {
-
-                return {
-                    occupied: false,
-                    checkout: null,
-                    daysLeft: null,
-                    nextCheckIn: null
-                };
-
+            if (!icalUrl) {
+                return { occupied: false, checkout: null, daysLeft: null };
             }
 
-            const checkoutDate = new Date(now);
-            checkoutDate.setDate(now.getDate() + 1);
+            let events;
+            try {
+                events = await ical.async.fromURL(icalUrl);
+            } catch (e) {
+                console.error('iCal fetch failed:', e.message);
+                return { occupied: false, checkout: null, daysLeft: null };
+            }
+
+            const today = new Date(now);
+            today.setHours(0, 0, 0, 0);
+
+            let current = null;
+
+            for (const ev of Object.values(events)) {
+                if (ev.type !== 'VEVENT') continue;
+                const start = new Date(ev.start);
+                const end   = new Date(ev.end);
+                start.setHours(0, 0, 0, 0);
+                end.setHours(0, 0, 0, 0);
+                if (start <= today && today < end) {
+                    current = ev;
+                    break;
+                }
+            }
+
+            if (!current) {
+                return { occupied: false, checkout: null, daysLeft: null };
+            }
+
+            const checkoutDate = new Date(current.end);
+            checkoutDate.setHours(0, 0, 0, 0);
 
             const msPerDay = 1000 * 60 * 60 * 24;
-            const daysLeft = Math.ceil(
-                (checkoutDate - now) / msPerDay
-            );
+            const daysLeft = Math.ceil((checkoutDate - today) / msPerDay);
 
-            const checkoutFormatted =
-                checkoutDate.toLocaleDateString(
-                    'pt-BR',
-                    {
-                        weekday: 'long',
-                        day: 'numeric',
-                        month: 'long'
-                    }
-                );
+            const checkoutFormatted = checkoutDate.toLocaleDateString('pt-BR', {
+                weekday: 'long', day: 'numeric', month: 'long'
+            });
 
-            return {
-                occupied: true,
-                checkout: checkoutFormatted,
-                daysLeft,
-                nextCheckIn: null
-            };
+            return { occupied: true, checkout: checkoutFormatted, daysLeft };
 
         })(),
 

@@ -2,6 +2,7 @@
   "name": "kindle-concierge",
   "version": "1.0.0",
   "dependencies": {
+    "node-ical": "^0.26.1",
     "puppeteer": "^24.10.0",
     "qrcode": "^1.5.4"
   }
