@@ -11,41 +11,85 @@
 
 <body>
 
-<div class="header">
-{{DAY}}
+<div class="top">
+
+    <div class="weekday">
+        {{DAY}}
+    </div>
+
+    <div class="date">
+        {{DATE}}
+    </div>
+
 </div>
 
-<div class="date">
-{{DATE}}
-</div>
+<div class="line"></div>
 
 <div class="greeting">
-Olá, hóspede.
+
+    <div class="hello">
+        Olá, hóspede.
+    </div>
+
+    <div class="message">
+        {{MESSAGE}}
+    </div>
+
 </div>
 
-<div class="message">
-{{MESSAGE}}
+<div class="card">
+
+    <div class="card-title">
+        CLIMA AGORA
+    </div>
+
+    <div class="temperature">
+        {{TEMP}}
+    </div>
+
+    <div class="condition">
+        {{CONDITION}}
+    </div>
+
+    <div class="minmax">
+
+        Máx {{MAX}}°
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Min {{MIN}}°
+
+    </div>
+
 </div>
 
-<div class="temperature">
-{{TEMP}}
+<div class="card">
+
+    <div class="card-title">
+        PRÓXIMOS 3 DIAS
+    </div>
+
+    {{FORECAST}}
+
 </div>
 
-<div class="condition">
-{{CONDITION}}
+<div class="card">
+
+    <div class="card-title">
+        SUA ESTADIA
+    </div>
+
+    Em breve
+
 </div>
 
-<div class="minmax">
-Máx {{MAX}}° &nbsp;&nbsp;&nbsp;
-Min {{MIN}}°
-</div>
+<div class="card">
 
-<div class="forecast-title">
-Próximos 3 dias
-</div>
+    <div class="card-title">
+        EVENTOS PRÓXIMOS
+    </div>
 
-{{FORECAST}}
+    Versão 2
+
+</div>
 
 </body>
-
 </html>
