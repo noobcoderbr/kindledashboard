@@ -180,7 +180,14 @@ async function run() {
 
     };
 
-    const labels = ['Hoje', 'Qui', 'Sex', 'Sab'];
+    const labels = Array.from({ length: 4 }, (_, i) => {
+        if (i === 0) return 'Hoje';
+        const d = new Date(now);
+        d.setDate(d.getDate() + i);
+        return d.toLocaleDateString('pt-BR', { weekday: 'short', timeZone: 'America/Sao_Paulo' })
+            .replace('.', '')
+            .toUpperCase();
+    });
 
     for (let i = 0; i < 4; i++) {
 
