@@ -25,11 +25,10 @@
     letter-spacing: .5px;
   }
 
-  /* Kindle frame */
   .kindle-frame {
     background: #fff;
-    width: 536px;   /* half of 1072 for screen preview */
-    min-height: 400px;
+    width: 536px;
+    min-height: 200px;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0,0,0,.4);
@@ -37,7 +36,6 @@
     font-family: Georgia, serif;
   }
 
-  /* Section header */
   .section-eyebrow {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-size: 10px;
@@ -57,7 +55,6 @@
     background: #e0e0e0;
   }
 
-  /* Event card — Kindle style */
   .ev-card {
     border-left: 3px solid #111;
     padding: 10px 14px;
@@ -65,6 +62,7 @@
     background: #fafafa;
     border-radius: 0 6px 6px 0;
   }
+  .ev-card:last-child { margin-bottom: 0; }
 
   .ev-title {
     font-size: 16px;
@@ -106,7 +104,6 @@
     font-style: italic;
   }
 
-  /* Controls */
   .controls {
     display: flex;
     gap: 12px;
@@ -127,7 +124,6 @@
   }
 
   select { background: #fff; color: #1d1d1f; }
-
   button { background: #0071e3; color: #fff; font-weight: 500; }
   button:hover { opacity: .85; }
 
@@ -141,6 +137,12 @@
     border-radius: 8px;
   }
   a.back:hover { opacity: 1; }
+
+  .debug {
+    color: rgba(255,255,255,.5);
+    font-size: 12px;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -173,6 +175,8 @@
   <div id="eventDisplay"></div>
 </div>
 
+<div class="debug" id="debugInfo"></div>
+
 <script>
 const SEED = [
   { "id":"1","status":"approved","type":"recurring","recurringDay":"saturday","date":null,"title_pt":"Feira de Antiguidades","title_en":"Antiques Fair","note_pt":"Praça XV de Novembro, das 9h às 17h","note_en":"Praça XV de Novembro, 9am – 5pm","instagram":"@feiraxv" },
@@ -191,114 +195,117 @@ function loadFromStorage() {
   render();
 }
 
-const DAY_NAMES_EN = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+const DAY_INDEX = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
 const DAY_DISPLAY = {
   pt: { monday:'Segunda',tuesday:'Terça',wednesday:'Quarta',thursday:'Quinta',friday:'Sexta',saturday:'Sábado',sunday:'Domingo' },
   en: { monday:'Monday',tuesday:'Tuesday',wednesday:'Wednesday',thursday:'Thursday',friday:'Friday',saturday:'Saturday',sunday:'Sunday' }
 };
+
 const LABELS = {
-  pt: { eyebrow:'Eventos próximos', today:'Hoje', thisWeek:'Esta semana', noEvents:'Sem eventos próximos.', recurring:'toda ', oneoffPrefix:'' },
-  en: { eyebrow:'Upcoming Events',  today:'Today',thisWeek:'This week',  noEvents:'No upcoming events.',  recurring:'every ', oneoffPrefix:'' }
+  pt: { eyebrow:'Eventos próximos', today:'Hoje', noEvents:'Sem eventos próximos.' },
+  en: { eyebrow:'Upcoming Events',  today:'Today', noEvents:'No upcoming events.' }
 };
 
 function getTodayDay() {
   const sel = document.getElementById('daySelect').value;
-  if (sel) return sel;
-  return DAY_NAMES_EN[new Date().getDay()];
+  return sel || DAY_INDEX[new Date().getDay()];
 }
 
-function getUpcomingOneoffs(lang, todayIso) {
-  return events
-    .filter(e => e.status === 'approved' && e.type === 'oneoff' && e.date >= todayIso)
-    .sort((a, b) => a.date.localeCompare(b.date))
-    .slice(0, 3);
+// Returns ISO date string (YYYY-MM-DD) for today (or simulated today)
+function getTodayIso(todayDay) {
+  const now = new Date();
+  const realDay = DAY_INDEX[now.getDay()];
+  if (!document.getElementById('daySelect').value) {
+    return now.toLocaleDateString('en-CA');
+  }
+  // Simulate: shift today by the difference in days
+  const realIdx = DAY_INDEX.indexOf(realDay);
+  const simIdx  = DAY_INDEX.indexOf(todayDay);
+  let diff = (simIdx - realIdx + 7) % 7;
+  const sim = new Date(now);
+  sim.setDate(sim.getDate() + diff);
+  return sim.toLocaleDateString('en-CA');
 }
 
-function getTodayRecurring(todayDay) {
-  return events.filter(e => e.status === 'approved' && e.type === 'recurring' && e.recurringDay === todayDay);
+// Compute next occurrence ISO date for any event relative to todayIso/todayDay
+function nextOccurrence(ev, todayIso, todayDay) {
+  if (ev.status !== 'approved') return null;
+
+  if (ev.type === 'oneoff') {
+    return ev.date >= todayIso ? ev.date : null;
+  }
+
+  // recurring: find next day of week >= today (including today)
+  const todayIdx = DAY_INDEX.indexOf(todayDay);
+  const evIdx    = DAY_INDEX.indexOf(ev.recurringDay);
+  const daysAhead = (evIdx - todayIdx + 7) % 7; // 0 = today
+
+  const base = new Date(todayIso + 'T00:00:00Z');
+  base.setUTCDate(base.getUTCDate() + daysAhead);
+  return base.toISOString().slice(0, 10);
 }
 
-function getThisWeekRecurring(todayDay) {
-  const days = DAY_NAMES_EN;
-  const todayIdx = days.indexOf(todayDay);
-  return events.filter(e => {
-    if (e.status !== 'approved' || e.type !== 'recurring') return false;
-    const evIdx = days.indexOf(e.recurringDay);
-    const diff = (evIdx - todayIdx + 7) % 7;
-    return diff > 0 && diff <= 6;
-  }).sort((a, b) => {
-    const ai = (DAY_NAMES_EN.indexOf(a.recurringDay) - DAY_NAMES_EN.indexOf(todayDay) + 7) % 7;
-    const bi = (DAY_NAMES_EN.indexOf(b.recurringDay) - DAY_NAMES_EN.indexOf(todayDay) + 7) % 7;
-    return ai - bi;
-  });
-}
+function formatWhen(ev, nextDate, lang, todayIso) {
+  const L = LABELS[lang];
+  if (nextDate === todayIso) return L.today.toUpperCase();
 
-function formatOneoffDate(iso, lang) {
-  const [y,m,d] = iso.split('-');
+  if (ev.type === 'recurring') {
+    return DAY_DISPLAY[lang][ev.recurringDay].toUpperCase();
+  }
+
+  // oneoff: format the date
+  const [y, m, d] = nextDate.split('-');
   const date = new Date(y, m-1, d);
+  const locale = lang === 'pt' ? 'pt-BR' : 'en-US';
   const opts = lang === 'pt'
     ? { weekday:'long', day:'numeric', month:'long' }
     : { weekday:'long', month:'long', day:'numeric' };
-  return date.toLocaleDateString(lang === 'pt' ? 'pt-BR' : 'en-US', opts);
+  return date.toLocaleDateString(locale, opts);
+}
+
+function getNextEvents(todayIso, todayDay, max = 3) {
+  return events
+    .map(ev => ({ ev, next: nextOccurrence(ev, todayIso, todayDay) }))
+    .filter(x => x.next !== null)
+    .sort((a, b) => a.next.localeCompare(b.next))
+    .slice(0, max);
+}
+
+function cardHtml(ev, nextDate, lang, todayIso) {
+  const title = lang === 'pt' ? ev.title_pt : (ev.title_en || ev.title_pt);
+  const note  = lang === 'pt' ? ev.note_pt  : (ev.note_en  || ev.note_pt);
+  const when  = formatWhen(ev, nextDate, lang, todayIso);
+  return `
+<div class="ev-card">
+  <div class="ev-when">${when}</div>
+  <div class="ev-title">${title}</div>
+  <div class="ev-note">${note}</div>
+  ${ev.instagram ? `<div class="ev-instagram">${ev.instagram}</div>` : ''}
+</div>`;
 }
 
 function render() {
-  const lang = document.getElementById('langSelect').value;
-  const L = LABELS[lang];
+  const lang     = document.getElementById('langSelect').value;
+  const L        = LABELS[lang];
   const todayDay = getTodayDay();
-
-  const now = new Date();
-  const todayIso = now.toLocaleDateString('en-CA');
+  const todayIso = getTodayIso(todayDay);
 
   document.getElementById('eyebrow').textContent = L.eyebrow;
 
-  const todayRec   = getTodayRecurring(todayDay);
-  const weekRec    = getThisWeekRecurring(todayDay);
-  const oneoffs    = getUpcomingOneoffs(lang, todayIso);
+  const items = getNextEvents(todayIso, todayDay, 3);
 
-  let html = '';
+  document.getElementById('debugInfo').textContent =
+    `Simulando: ${todayDay} (${todayIso}) · ${items.length} evento(s) encontrado(s)`;
 
-  if (todayRec.length) {
-    html += section(L.today, todayRec.map(e => cardHtml(e, lang, L.today.toUpperCase())));
+  if (!items.length) {
+    document.getElementById('eventDisplay').innerHTML =
+      `<div class="no-events">${L.noEvents}</div>`;
+    return;
   }
 
-  if (weekRec.length) {
-    const weekItems = weekRec.map(e => {
-      const dayName = DAY_DISPLAY[lang][e.recurringDay];
-      return cardHtml(e, lang, dayName.toUpperCase());
-    });
-    html += section(L.thisWeek, weekItems);
-  }
-
-  if (oneoffs.length) {
-    const oneoffItems = oneoffs.map(e => {
-      const label = formatOneoffDate(e.date, lang);
-      return cardHtml(e, lang, label);
-    });
-    html += section('', oneoffItems);
-  }
-
-  if (!html) {
-    html = `<div class="no-events">${L.noEvents}</div>`;
-  }
-
-  document.getElementById('eventDisplay').innerHTML = html;
-}
-
-function section(header, cards) {
-  return cards.join('');
-}
-
-function cardHtml(e, lang, whenLabel) {
-  const title = lang === 'pt' ? e.title_pt : (e.title_en || e.title_pt);
-  const note  = lang === 'pt' ? e.note_pt  : (e.note_en  || e.note_pt);
-  return `
-<div class="ev-card">
-  <div class="ev-when">${whenLabel}</div>
-  <div class="ev-title">${title}</div>
-  <div class="ev-note">${note}</div>
-  ${e.instagram ? `<div class="ev-instagram">${e.instagram}</div>` : ''}
-</div>`;
+  document.getElementById('eventDisplay').innerHTML =
+    items.map(({ ev, next }) => cardHtml(ev, next, lang, todayIso)).join('');
 }
 
 render();
