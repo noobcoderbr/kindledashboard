@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "status": "approved",
+    "type": "recurring",
+    "recurringDay": "saturday",
+    "date": null,
+    "title_pt": "Feira de Antiguidades",
+    "title_en": "Antiques Fair",
+    "note_pt": "Praça XV de Novembro, das 9h às 17h",
+    "note_en": "Praça XV de Novembro, 9am – 5pm",
+    "instagram": "@feiraxv"
+  },
+  {
+    "id": "2",
+    "status": "approved",
+    "type": "recurring",
+    "recurringDay": "sunday",
+    "date": null,
+    "title_pt": "Feira Hippie de Ipanema",
+    "title_en": "Ipanema Hippie Fair",
+    "note_pt": "Praça General Osório, das 9h às 18h",
+    "note_en": "Praça General Osório, 9am – 6pm",
+    "instagram": "@feirahippie"
+  },
+  {
+    "id": "3",
+    "status": "pending",
+    "type": "oneoff",
+    "recurringDay": null,
+    "date": "2026-09-13",
+    "title_pt": "Rock in Rio",
+    "title_en": "Rock in Rio",
+    "note_pt": "Cidade do Rock, Barra da Tijuca",
+    "note_en": "Cidade do Rock, Barra da Tijuca",
+    "instagram": "@rockinrio"
+  }
+]
