@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Kindle Events — Preview</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #888;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+    gap: 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  h2 {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: .7;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+
+  /* Kindle frame */
+  .kindle-frame {
+    background: #fff;
+    width: 536px;   /* half of 1072 for screen preview */
+    min-height: 400px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+    padding: 28px 24px;
+    font-family: Georgia, serif;
+  }
+
+  /* Section header */
+  .section-eyebrow {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e0e0e0;
+  }
+
+  /* Event card — Kindle style */
+  .ev-card {
+    border-left: 3px solid #111;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    background: #fafafa;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .ev-title {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 4px;
+    color: #111;
+  }
+
+  .ev-when {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 5px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .ev-note {
+    font-size: 13px;
+    color: #444;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .ev-instagram {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .no-events {
+    text-align: center;
+    padding: 24px;
+    color: #999;
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .ctrl-label { color: #fff; font-size: 13px; opacity: .8; }
+
+  select, button {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  select { background: #fff; color: #1d1d1f; }
+
+  button { background: #0071e3; color: #fff; font-weight: 500; }
+  button:hover { opacity: .85; }
+
+  a.back {
+    color: #fff;
+    font-size: 13px;
+    opacity: .7;
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 8px;
+  }
+  a.back:hover { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <a href="admin.html" class="back">← Admin</a>
+  <span class="ctrl-label">Idioma:</span>
+  <select id="langSelect" onchange="render()">
+    <option value="pt">Português</option>
+    <option value="en">English</option>
+  </select>
+  <span class="ctrl-label">Simular dia:</span>
+  <select id="daySelect" onchange="render()">
+    <option value="">Hoje</option>
+    <option value="monday">Segunda</option>
+    <option value="tuesday">Terça</option>
+    <option value="wednesday">Quarta</option>
+    <option value="thursday">Quinta</option>
+    <option value="friday">Sexta</option>
+    <option value="saturday">Sábado</option>
+    <option value="sunday">Domingo</option>
+  </select>
+  <button onclick="loadFromStorage()">↻ Recarregar eventos</button>
+</div>
+
+<h2>Preview — como aparece no Kindle</h2>
+
+<div class="kindle-frame">
+  <div class="section-eyebrow" id="eyebrow">Eventos próximos</div>
+  <div id="eventDisplay"></div>
+</div>
+
+<script>
+const SEED = [
+  { "id":"1","status":"approved","type":"recurring","recurringDay":"saturday","date":null,"title_pt":"Feira de Antiguidades","title_en":"Antiques Fair","note_pt":"Praça XV de Novembro, das 9h às 17h","note_en":"Praça XV de Novembro, 9am – 5pm","instagram":"@feiraxv" },
+  { "id":"2","status":"approved","type":"recurring","recurringDay":"sunday","date":null,"title_pt":"Feira Hippie de Ipanema","title_en":"Ipanema Hippie Fair","note_pt":"Praça General Osório, das 9h às 18h","note_en":"Praça General Osório, 9am – 6pm","instagram":"@feirahippie" },
+  { "id":"3","status":"approved","type":"oneoff","recurringDay":null,"date":"2026-09-13","title_pt":"Rock in Rio","title_en":"Rock in Rio","note_pt":"Cidade do Rock, Barra da Tijuca","note_en":"Cidade do Rock, Barra da Tijuca","instagram":"@rockinrio" },
+  { "id":"4","status":"approved","type":"recurring","recurringDay":"saturday","date":null,"title_pt":"Feira do Lavradio","title_en":"Lavradio Antiques Street Fair","note_pt":"Rua do Lavradio, Lapa, das 9h às 17h","note_en":"Rua do Lavradio, Lapa, 9am – 5pm","instagram":"@feiradolavradio" },
+  { "id":"5","status":"approved","type":"recurring","recurringDay":"sunday","date":null,"title_pt":"Feira de São Cristóvão","title_en":"São Cristóvão Fair","note_pt":"Centro Luiz Gonzaga, das 10h às 22h","note_en":"Centro Luiz Gonzaga, 10am – 10pm","instagram":"@feirasaocristovao" },
+  { "id":"6","status":"approved","type":"oneoff","recurringDay":null,"date":"2026-07-04","title_pt":"Festa Junina do SESC","title_en":"SESC June Festival","note_pt":"SESC Tijuca, a partir das 15h","note_en":"SESC Tijuca, from 3pm","instagram":"@sescrj" },
+  { "id":"7","status":"pending","type":"oneoff","recurringDay":null,"date":"2026-08-15","title_pt":"Parada do Orgulho LGBT+","title_en":"LGBT+ Pride Parade","note_pt":"Copacabana, a partir das 14h","note_en":"Copacabana, from 2pm","instagram":"@paradariorj" }
+];
+
+let events = JSON.parse(localStorage.getItem('kindle-events') || 'null') || SEED;
+
+function loadFromStorage() {
+  events = JSON.parse(localStorage.getItem('kindle-events') || 'null') || SEED;
+  render();
+}
+
+const DAY_NAMES_EN = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+const DAY_DISPLAY = {
+  pt: { monday:'Segunda',tuesday:'Terça',wednesday:'Quarta',thursday:'Quinta',friday:'Sexta',saturday:'Sábado',sunday:'Domingo' },
+  en: { monday:'Monday',tuesday:'Tuesday',wednesday:'Wednesday',thursday:'Thursday',friday:'Friday',saturday:'Saturday',sunday:'Sunday' }
+};
+const LABELS = {
+  pt: { eyebrow:'Eventos próximos', today:'Hoje', thisWeek:'Esta semana', noEvents:'Sem eventos próximos.', recurring:'toda ', oneoffPrefix:'' },
+  en: { eyebrow:'Upcoming Events',  today:'Today',thisWeek:'This week',  noEvents:'No upcoming events.',  recurring:'every ', oneoffPrefix:'' }
+};
+
+function getTodayDay() {
+  const sel = document.getElementById('daySelect').value;
+  if (sel) return sel;
+  return DAY_NAMES_EN[new Date().getDay()];
+}
+
+function getUpcomingOneoffs(lang, todayIso) {
+  return events
+    .filter(e => e.status === 'approved' && e.type === 'oneoff' && e.date >= todayIso)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, 3);
+}
+
+function getTodayRecurring(todayDay) {
+  return events.filter(e => e.status === 'approved' && e.type === 'recurring' && e.recurringDay === todayDay);
+}
+
+function getThisWeekRecurring(todayDay) {
+  const days = DAY_NAMES_EN;
+  const todayIdx = days.indexOf(todayDay);
+  return events.filter(e => {
+    if (e.status !== 'approved' || e.type !== 'recurring') return false;
+    const evIdx = days.indexOf(e.recurringDay);
+    const diff = (evIdx - todayIdx + 7) % 7;
+    return diff > 0 && diff <= 6;
+  }).sort((a, b) => {
+    const ai = (DAY_NAMES_EN.indexOf(a.recurringDay) - DAY_NAMES_EN.indexOf(todayDay) + 7) % 7;
+    const bi = (DAY_NAMES_EN.indexOf(b.recurringDay) - DAY_NAMES_EN.indexOf(todayDay) + 7) % 7;
+    return ai - bi;
+  });
+}
+
+function formatOneoffDate(iso, lang) {
+  const [y,m,d] = iso.split('-');
+  const date = new Date(y, m-1, d);
+  const opts = lang === 'pt'
+    ? { weekday:'long', day:'numeric', month:'long' }
+    : { weekday:'long', month:'long', day:'numeric' };
+  return date.toLocaleDateString(lang === 'pt' ? 'pt-BR' : 'en-US', opts);
+}
+
+function render() {
+  const lang = document.getElementById('langSelect').value;
+  const L = LABELS[lang];
+  const todayDay = getTodayDay();
+
+  const now = new Date();
+  const todayIso = now.toLocaleDateString('en-CA');
+
+  document.getElementById('eyebrow').textContent = L.eyebrow;
+
+  const todayRec   = getTodayRecurring(todayDay);
+  const weekRec    = getThisWeekRecurring(todayDay);
+  const oneoffs    = getUpcomingOneoffs(lang, todayIso);
+
+  let html = '';
+
+  if (todayRec.length) {
+    html += section(L.today, todayRec.map(e => cardHtml(e, lang, L.today.toUpperCase())));
+  }
+
+  if (weekRec.length) {
+    const weekItems = weekRec.map(e => {
+      const dayName = DAY_DISPLAY[lang][e.recurringDay];
+      return cardHtml(e, lang, dayName.toUpperCase());
+    });
+    html += section(L.thisWeek, weekItems);
+  }
+
+  if (oneoffs.length) {
+    const oneoffItems = oneoffs.map(e => {
+      const label = formatOneoffDate(e.date, lang);
+      return cardHtml(e, lang, label);
+    });
+    html += section('', oneoffItems);
+  }
+
+  if (!html) {
+    html = `<div class="no-events">${L.noEvents}</div>`;
+  }
+
+  document.getElementById('eventDisplay').innerHTML = html;
+}
+
+function section(header, cards) {
+  return cards.join('');
+}
+
+function cardHtml(e, lang, whenLabel) {
+  const title = lang === 'pt' ? e.title_pt : (e.title_en || e.title_pt);
+  const note  = lang === 'pt' ? e.note_pt  : (e.note_en  || e.note_pt);
+  return `
+<div class="ev-card">
+  <div class="ev-when">${whenLabel}</div>
+  <div class="ev-title">${title}</div>
+  <div class="ev-note">${note}</div>
+  ${e.instagram ? `<div class="ev-instagram">${e.instagram}</div>` : ''}
+</div>`;
+}
+
+render();
+</script>
+</body>
+</html>

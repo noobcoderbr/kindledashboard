@@ -1,0 +1,86 @@
+[
+  {
+    "id": "1",
+    "status": "approved",
+    "type": "recurring",
+    "recurringDay": "saturday",
+    "date": null,
+    "title_pt": "Feira de Antiguidades",
+    "title_en": "Antiques Fair",
+    "note_pt": "Praça XV de Novembro, das 9h às 17h",
+    "note_en": "Praça XV de Novembro, 9am – 5pm",
+    "instagram": "@feiraxv"
+  },
+  {
+    "id": "2",
+    "status": "approved",
+    "type": "recurring",
+    "recurringDay": "sunday",
+    "date": null,
+    "title_pt": "Feira Hippie de Ipanema",
+    "title_en": "Ipanema Hippie Fair",
+    "note_pt": "Praça General Osório, das 9h às 18h",
+    "note_en": "Praça General Osório, 9am – 6pm",
+    "instagram": "@feirahippie"
+  },
+  {
+    "id": "3",
+    "status": "approved",
+    "type": "oneoff",
+    "recurringDay": null,
+    "date": "2026-09-13",
+    "title_pt": "Rock in Rio",
+    "title_en": "Rock in Rio",
+    "note_pt": "Cidade do Rock, Barra da Tijuca",
+    "note_en": "Cidade do Rock, Barra da Tijuca",
+    "instagram": "@rockinrio"
+  },
+  {
+    "id": "4",
+    "status": "approved",
+    "type": "recurring",
+    "recurringDay": "saturday",
+    "date": null,
+    "title_pt": "Feira do Lavradio",
+    "title_en": "Lavradio Antiques Street Fair",
+    "note_pt": "Rua do Lavradio, Lapa, das 9h às 17h",
+    "note_en": "Rua do Lavradio, Lapa, 9am – 5pm",
+    "instagram": "@feiradolavradio"
+  },
+  {
+    "id": "5",
+    "status": "approved",
+    "type": "recurring",
+    "recurringDay": "sunday",
+    "date": null,
+    "title_pt": "Feira de São Cristóvão",
+    "title_en": "São Cristóvão Fair",
+    "note_pt": "Centro Luiz Gonzaga, das 10h às 22h",
+    "note_en": "Centro Luiz Gonzaga, 10am – 10pm",
+    "instagram": "@feirasaocristovao"
+  },
+  {
+    "id": "6",
+    "status": "approved",
+    "type": "oneoff",
+    "recurringDay": null,
+    "date": "2026-07-04",
+    "title_pt": "Festa Junina do SESC",
+    "title_en": "SESC June Festival",
+    "note_pt": "SESC Tijuca, a partir das 15h",
+    "note_en": "SESC Tijuca, from 3pm",
+    "instagram": "@sescrj"
+  },
+  {
+    "id": "7",
+    "status": "pending",
+    "type": "oneoff",
+    "recurringDay": null,
+    "date": "2026-08-15",
+    "title_pt": "Parada do Orgulho LGBT+",
+    "title_en": "LGBT+ Pride Parade",
+    "note_pt": "Copacabana, a partir das 14h",
+    "note_en": "Copacabana, from 2pm",
+    "instagram": "@paradariorj"
+  }
+]
