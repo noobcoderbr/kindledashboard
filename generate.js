@@ -181,7 +181,7 @@ async function run() {
     };
 
     const labels = Array.from({ length: 4 }, (_, i) => {
-        if (i === 0) return 'Hoje';
+        if (i === 0) return 'HOJE';
         const d = new Date(now);
         d.setDate(d.getDate() + i);
         return d.toLocaleDateString('pt-BR', { weekday: 'short', timeZone: 'America/Sao_Paulo' })
