@@ -1,0 +1,31 @@
+{
+  "dateLocale": "en-US",
+  "hello": "Hello,\nguest.",
+  "weatherLabels": {
+    "0": "Clear sky",
+    "1": "Partly cloudy",
+    "3": "Overcast",
+    "51": "Rain",
+    "80": "Storm",
+    "default": "Variable"
+  },
+  "feels": "Feels like",
+  "humidity": "Humidity",
+  "wind": "Wind",
+  "windUnit": "km/h",
+  "today": "TODAY",
+  "stayEyebrow": "YOUR STAY",
+  "daySingular": "day",
+  "dayPlural": "days",
+  "remainingSingular": "remaining",
+  "remainingPlural": "remaining",
+  "checkout": "Check-out",
+  "vacantEyebrow": "APARTMENT AVAILABLE",
+  "nextBooking": "Next booking",
+  "inDays": "in",
+  "whatsappTitle": "Contact Us",
+  "whatsappBody": "Need help? Scan the QR code to chat with us.",
+  "wifiTitle": "Wi-Fi",
+  "wifiBody": "Scan to connect automatically to the network.",
+  "updatedAt": "Updated at"
+}

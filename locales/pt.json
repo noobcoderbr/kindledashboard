@@ -1,0 +1,31 @@
+{
+  "dateLocale": "pt-BR",
+  "hello": "Olá,\nhóspede.",
+  "weatherLabels": {
+    "0": "Céu limpo",
+    "1": "Parcialmente nublado",
+    "3": "Nublado",
+    "51": "Chuva",
+    "80": "Tempestade",
+    "default": "Tempo variável"
+  },
+  "feels": "Sensação",
+  "humidity": "Umidade",
+  "wind": "Vento",
+  "windUnit": "km/h",
+  "today": "HOJE",
+  "stayEyebrow": "SUA ESTADIA",
+  "daySingular": "dia",
+  "dayPlural": "dias",
+  "remainingSingular": "restante",
+  "remainingPlural": "restantes",
+  "checkout": "Check-out",
+  "vacantEyebrow": "APARTAMENTO DISPONÍVEL",
+  "nextBooking": "Próxima hospedagem",
+  "inDays": "em",
+  "whatsappTitle": "Fale Conosco",
+  "whatsappBody": "Precisa de ajuda? Escaneie o QR code ao lado e fale comigo.",
+  "wifiTitle": "Wi-Fi",
+  "wifiBody": "Escaneie para conectar automaticamente à rede.",
+  "updatedAt": "Atualizado às"
+}
