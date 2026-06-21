@@ -513,8 +513,9 @@ function renderList() {
   </div>
   <span class="badge badge-${e.status}">${statusLabel(e.status)}</span>
   <div class="event-actions">
-    ${e.status !== 'approved' ? `<button class="btn btn-approve" onclick="setStatus('${e.id}','approved')">✓</button>` : ''}
-    ${e.status !== 'rejected' ? `<button class="btn btn-reject"  onclick="setStatus('${e.id}','rejected')">✗</button>` : ''}
+    ${e.status === 'pending'  ? `<button class="btn btn-approve" onclick="setStatus('${e.id}','approved')">✓ Aprovar</button>` : ''}
+    ${e.status === 'pending'  ? `<button class="btn btn-reject"  onclick="setStatus('${e.id}','rejected')">✗ Rejeitar</button>` : ''}
+    ${e.status === 'rejected' ? `<button class="btn btn-approve" onclick="setStatus('${e.id}','approved')">✓ Aprovar</button>` : ''}
     <button class="btn btn-edit"   onclick="editEvent('${e.id}')">Editar</button>
     <button class="btn btn-delete" onclick="deleteEvent('${e.id}')">×</button>
   </div>
