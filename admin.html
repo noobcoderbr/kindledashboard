@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Kindle Concierge — Admin de Eventos</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    background: #f5f5f5;
+    color: #111;
+    min-height: 100vh;
+  }
+
+  header {
+    background: #111;
+    color: #fff;
+    padding: 20px 32px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  header h1 { font-size: 18px; font-weight: 600; }
+  header span { font-size: 13px; color: #888; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+
+  /* TOOLBAR */
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .toolbar h2 { font-size: 16px; font-weight: 600; flex: 1; }
+
+  /* BUTTONS */
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: opacity .15s;
+  }
+  button:hover { opacity: .8; }
+  .btn-primary   { background: #111; color: #fff; }
+  .btn-secondary { background: #fff; color: #111; border: 1.5px solid #ccc; }
+  .btn-success   { background: #1a7a3c; color: #fff; }
+  .btn-danger    { background: #c0392b; color: #fff; font-size: 12px; padding: 6px 12px; }
+  .btn-warn      { background: #e67e22; color: #fff; font-size: 12px; padding: 6px 12px; }
+  .btn-sm        { font-size: 12px; padding: 5px 10px; }
+
+  /* FILTER TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+  .tab {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    border: 1.5px solid #ddd;
+    background: #fff;
+    color: #555;
+    transition: all .15s;
+  }
+  .tab.active { background: #111; color: #fff; border-color: #111; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .badge-approved { background: #d4edda; color: #1a7a3c; }
+  .badge-pending  { background: #fff3cd; color: #856404; }
+  .badge-rejected { background: #f8d7da; color: #721c24; }
+
+  /* EVENT CARDS */
+  .event-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .event-card {
+    background: #fff;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: start;
+  }
+  .event-card.rejected { opacity: .5; }
+
+  .event-type-tag {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 4px;
+  }
+  .event-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .event-title-en {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 6px;
+  }
+  .event-note {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 2px;
+  }
+  .event-instagram {
+    font-size: 12px;
+    color: #0077b5;
+    margin-top: 4px;
+  }
+  .event-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+  }
+
+  /* FORM */
+  .form-card {
+    background: #fff;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 28px;
+    display: none;
+  }
+  .form-card.open { display: block; }
+  .form-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 18px; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .form-grid .full { grid-column: 1 / -1; }
+
+  label { display: block; font-size: 12px; font-weight: 500; color: #555; margin-bottom: 4px; }
+  input[type="text"], input[type="date"], select, textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .15s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: #111; }
+  textarea { resize: vertical; min-height: 60px; }
+
+  .form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+    justify-content: flex-end;
+  }
+
+  /* EXPORT */
+  .export-section {
+    margin-top: 32px;
+    background: #fff;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .export-section h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+  .export-section pre {
+    background: #f5f5f5;
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 12px;
+    overflow-x: auto;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre;
+  }
+  .export-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+  /* IMPORT */
+  .import-section {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+  }
+  .import-section h4 { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #555; }
+  .import-section textarea { font-family: monospace; font-size: 12px; }
+  .import-actions { display: flex; gap: 8px; margin-top: 8px; }
+
+  .empty { text-align: center; padding: 40px; color: #888; font-size: 14px; }
+
+  .notice {
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #6d4c00;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Kindle Concierge</h1>
+  <span>Administração de Eventos</span>
+</header>
+
+<main>
+
+  <div class="notice">
+    ℹ️ As alterações ficam salvas apenas nesta aba. Para publicar, copie o JSON exportado e substitua o arquivo <strong>events.json</strong> no repositório.
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <h2>Eventos</h2>
+    <button class="btn-secondary btn-sm" onclick="toggleImport()">↑ Importar JSON</button>
+    <button class="btn-primary" onclick="toggleForm()">+ Novo evento</button>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card" id="formCard">
+    <h3 id="formTitle">Novo evento</h3>
+    <div class="form-grid">
+
+      <div class="full">
+        <label>Tipo</label>
+        <select id="fType" onchange="toggleDateField()">
+          <option value="oneoff">Evento único (data específica)</option>
+          <option value="recurring">Evento recorrente (dia da semana)</option>
+        </select>
+      </div>
+
+      <div id="dateField">
+        <label>Data</label>
+        <input type="date" id="fDate">
+      </div>
+
+      <div id="recurringField" style="display:none">
+        <label>Dia da semana</label>
+        <select id="fRecurringDay">
+          <option value="monday">Segunda-feira</option>
+          <option value="tuesday">Terça-feira</option>
+          <option value="wednesday">Quarta-feira</option>
+          <option value="thursday">Quinta-feira</option>
+          <option value="friday">Sexta-feira</option>
+          <option value="saturday">Sábado</option>
+          <option value="sunday">Domingo</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Status</label>
+        <select id="fStatus">
+          <option value="pending">Pendente (aguardando aprovação)</option>
+          <option value="approved">Aprovado</option>
+          <option value="rejected">Rejeitado</option>
+        </select>
+      </div>
+
+      <div class="full">
+        <label>Título em português</label>
+        <input type="text" id="fTitlePt" placeholder="ex: Feira de Antiguidades">
+      </div>
+
+      <div class="full">
+        <label>Título em inglês</label>
+        <input type="text" id="fTitleEn" placeholder="ex: Antiques Fair">
+      </div>
+
+      <div>
+        <label>Descrição em português</label>
+        <textarea id="fNotePt" placeholder="ex: Praça XV, das 9h às 17h"></textarea>
+      </div>
+
+      <div>
+        <label>Descrição em inglês</label>
+        <textarea id="fNoteEn" placeholder="ex: Praça XV, 9am – 5pm"></textarea>
+      </div>
+
+      <div class="full">
+        <label>Instagram (opcional)</label>
+        <input type="text" id="fInstagram" placeholder="ex: @rockinrio">
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="cancelForm()">Cancelar</button>
+      <button class="btn-primary" onclick="saveEvent()">Salvar</button>
+    </div>
+  </div>
+
+  <!-- FILTER TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="setFilter('all', this)">Todos</div>
+    <div class="tab" onclick="setFilter('approved', this)">Aprovados</div>
+    <div class="tab" onclick="setFilter('pending', this)">Pendentes</div>
+    <div class="tab" onclick="setFilter('rejected', this)">Rejeitados</div>
+  </div>
+
+  <!-- LIST -->
+  <div class="event-list" id="eventList"></div>
+
+  <!-- EXPORT -->
+  <div class="export-section">
+    <h3>JSON para publicar</h3>
+    <pre id="jsonOutput"></pre>
+    <div class="export-actions">
+      <button class="btn-success" onclick="copyJson()">Copiar JSON</button>
+      <button class="btn-secondary btn-sm" onclick="downloadJson()">Baixar events.json</button>
+    </div>
+
+    <div class="import-section">
+      <h4>Importar JSON existente</h4>
+      <textarea id="importArea" rows="4" placeholder='Cole aqui o conteúdo do events.json e clique em "Carregar"'></textarea>
+      <div class="import-actions">
+        <button class="btn-secondary btn-sm" onclick="loadFromPaste()">Carregar</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let events = [];
+let filter = 'all';
+let editingId = null;
+
+const DAYS_PT = {
+  monday: 'Segunda-feira', tuesday: 'Terça-feira', wednesday: 'Quarta-feira',
+  thursday: 'Quinta-feira', friday: 'Sexta-feira', saturday: 'Sábado', sunday: 'Domingo'
+};
+const DAYS_EN = {
+  monday: 'Mondays', tuesday: 'Tuesdays', wednesday: 'Wednesdays',
+  thursday: 'Thursdays', friday: 'Fridays', saturday: 'Saturdays', sunday: 'Sundays'
+};
+
+// ── Eventos iniciais embutidos (fallback para file://) ────────────────────
+const INITIAL_EVENTS = [
+  {
+    "id": "1", "status": "approved", "type": "recurring", "recurringDay": "saturday", "date": null,
+    "title_pt": "Feira de Antiguidades", "title_en": "Antiques Fair",
+    "note_pt": "Praça XV de Novembro, das 9h às 17h", "note_en": "Praça XV de Novembro, 9am – 5pm",
+    "instagram": "@feiraxv"
+  },
+  {
+    "id": "2", "status": "approved", "type": "recurring", "recurringDay": "sunday", "date": null,
+    "title_pt": "Feira Hippie de Ipanema", "title_en": "Ipanema Hippie Fair",
+    "note_pt": "Praça General Osório, das 9h às 18h", "note_en": "Praça General Osório, 9am – 6pm",
+    "instagram": "@feirahippie"
+  },
+  {
+    "id": "3", "status": "pending", "type": "oneoff", "recurringDay": null, "date": "2026-09-13",
+    "title_pt": "Rock in Rio", "title_en": "Rock in Rio",
+    "note_pt": "Cidade do Rock, Barra da Tijuca", "note_en": "Cidade do Rock, Barra da Tijuca",
+    "instagram": "@rockinrio"
+  }
+];
+
+// ── Load: tenta fetch (GitHub Pages), cai no fallback inline ──────────────
+async function init() {
+  try {
+    const res = await fetch('events.json?_=' + Date.now());
+    if (res.ok) events = await res.json();
+    else events = INITIAL_EVENTS;
+  } catch (_) {
+    events = INITIAL_EVENTS;
+  }
+  render();
+}
+
+// ── Render list ────────────────────────────────────────────────────────────
+function render() {
+  const list = document.getElementById('eventList');
+  const visible = filter === 'all' ? events : events.filter(e => e.status === filter);
+
+  if (visible.length === 0) {
+    list.innerHTML = '<div class="empty">Nenhum evento' + (filter !== 'all' ? ' ' + filter : '') + '.</div>';
+  } else {
+    list.innerHTML = visible.map(e => cardHtml(e)).join('');
+  }
+
+  updateJson();
+}
+
+function cardHtml(e) {
+  const typeLabel = e.type === 'recurring'
+    ? 'Recorrente · ' + (DAYS_PT[e.recurringDay] || e.recurringDay)
+    : 'Único · ' + formatDate(e.date);
+
+  const badgeClass = { approved: 'badge-approved', pending: 'badge-pending', rejected: 'badge-rejected' }[e.status];
+  const badgeLabel = { approved: 'Aprovado', pending: 'Pendente', rejected: 'Rejeitado' }[e.status];
+
+  const approveBtn = e.status !== 'approved'
+    ? `<button class="btn-success btn-sm" onclick="setStatus('${e.id}', 'approved')">Aprovar</button>` : '';
+  const rejectBtn = e.status !== 'rejected'
+    ? `<button class="btn-danger btn-sm" onclick="setStatus('${e.id}', 'rejected')">Rejeitar</button>` : '';
+
+  return `
+<div class="event-card ${e.status === 'rejected' ? 'rejected' : ''}">
+  <div>
+    <div class="event-type-tag">${typeLabel}</div>
+    <div class="event-title">${e.title_pt}</div>
+    <div class="event-title-en">${e.title_en}</div>
+    <div class="event-note">🇧🇷 ${e.note_pt}</div>
+    <div class="event-note">🇺🇸 ${e.note_en}</div>
+    ${e.instagram ? `<div class="event-instagram">${e.instagram}</div>` : ''}
+  </div>
+  <div class="event-actions">
+    <span class="badge ${badgeClass}">${badgeLabel}</span>
+    ${approveBtn}
+    ${rejectBtn}
+    <button class="btn-secondary btn-sm" onclick="editEvent('${e.id}')">Editar</button>
+    <button class="btn-danger btn-sm" onclick="deleteEvent('${e.id}')">Excluir</button>
+  </div>
+</div>`;
+}
+
+function formatDate(str) {
+  if (!str) return '—';
+  const [y, m, d] = str.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+// ── Filter ─────────────────────────────────────────────────────────────────
+function setFilter(f, el) {
+  filter = f;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+// ── Form ───────────────────────────────────────────────────────────────────
+function toggleForm() {
+  const card = document.getElementById('formCard');
+  const isOpen = card.classList.contains('open');
+  if (isOpen) { cancelForm(); } else {
+    editingId = null;
+    clearForm();
+    document.getElementById('formTitle').textContent = 'Novo evento';
+    card.classList.add('open');
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function cancelForm() {
+  document.getElementById('formCard').classList.remove('open');
+  editingId = null;
+  clearForm();
+}
+
+function clearForm() {
+  ['fTitlePt','fTitleEn','fNotePt','fNoteEn','fInstagram','fDate'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('fType').value = 'oneoff';
+  document.getElementById('fStatus').value = 'pending';
+  document.getElementById('fRecurringDay').value = 'saturday';
+  toggleDateField();
+}
+
+function toggleDateField() {
+  const t = document.getElementById('fType').value;
+  document.getElementById('dateField').style.display      = t === 'oneoff'    ? '' : 'none';
+  document.getElementById('recurringField').style.display = t === 'recurring' ? '' : 'none';
+}
+
+function editEvent(id) {
+  const e = events.find(ev => ev.id === id);
+  if (!e) return;
+  editingId = id;
+  document.getElementById('fType').value         = e.type;
+  document.getElementById('fStatus').value       = e.status;
+  document.getElementById('fDate').value         = e.date || '';
+  document.getElementById('fRecurringDay').value = e.recurringDay || 'saturday';
+  document.getElementById('fTitlePt').value      = e.title_pt;
+  document.getElementById('fTitleEn').value      = e.title_en;
+  document.getElementById('fNotePt').value       = e.note_pt;
+  document.getElementById('fNoteEn').value       = e.note_en;
+  document.getElementById('fInstagram').value    = e.instagram || '';
+  document.getElementById('formTitle').textContent = 'Editar evento';
+  toggleDateField();
+  const card = document.getElementById('formCard');
+  card.classList.add('open');
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function saveEvent() {
+  const type = document.getElementById('fType').value;
+  const ev = {
+    id:           editingId || String(Date.now()),
+    status:       document.getElementById('fStatus').value,
+    type,
+    recurringDay: type === 'recurring' ? document.getElementById('fRecurringDay').value : null,
+    date:         type === 'oneoff'    ? document.getElementById('fDate').value || null : null,
+    title_pt:     document.getElementById('fTitlePt').value.trim(),
+    title_en:     document.getElementById('fTitleEn').value.trim(),
+    note_pt:      document.getElementById('fNotePt').value.trim(),
+    note_en:      document.getElementById('fNoteEn').value.trim(),
+    instagram:    document.getElementById('fInstagram').value.trim() || null,
+  };
+  if (!ev.title_pt || !ev.title_en) { alert('Preencha os títulos em PT e EN.'); return; }
+
+  if (editingId) {
+    events = events.map(e => e.id === editingId ? ev : e);
+  } else {
+    events.push(ev);
+  }
+  cancelForm();
+  render();
+}
+
+function deleteEvent(id) {
+  if (!confirm('Excluir este evento?')) return;
+  events = events.filter(e => e.id !== id);
+  render();
+}
+
+function setStatus(id, status) {
+  events = events.map(e => e.id === id ? { ...e, status } : e);
+  render();
+}
+
+// ── Import ─────────────────────────────────────────────────────────────────
+function toggleImport() {
+  const sec = document.querySelector('.import-section');
+  sec.style.display = sec.style.display === 'none' ? '' : 'none';
+}
+
+function loadFromPaste() {
+  try {
+    const parsed = JSON.parse(document.getElementById('importArea').value.trim());
+    if (!Array.isArray(parsed)) throw new Error('Formato inválido');
+    events = parsed;
+    document.getElementById('importArea').value = '';
+    render();
+    alert('JSON carregado com sucesso!');
+  } catch (e) {
+    alert('JSON inválido: ' + e.message);
+  }
+}
+
+// ── Export ─────────────────────────────────────────────────────────────────
+function updateJson() {
+  document.getElementById('jsonOutput').textContent = JSON.stringify(events, null, 2);
+}
+
+function copyJson() {
+  const text = JSON.stringify(events, null, 2);
+  navigator.clipboard.writeText(text).then(() => alert('JSON copiado!'));
+}
+
+function downloadJson() {
+  const blob = new Blob([JSON.stringify(events, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'events.json';
+  a.click();
+}
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
