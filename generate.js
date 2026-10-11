@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const QRCode = require('qrcode');
 const ical = require('node-ical');
+const sharp = require('sharp');
 
 const locales = {
     pt: require('./locales/pt.json'),
@@ -173,6 +174,13 @@ async function run() {
         await page.evaluate((data) => window.render(data), data);
 
         await page.screenshot({ path: `concierge-${lang}.png` });
+
+        // rotate 90° counter-clockwise for landscape Kindle display
+        await sharp(`concierge-${lang}.png`)
+            .rotate(-90)
+            .toFile(`concierge-${lang}-rotated.png`);
+        const fs = require('fs');
+        fs.renameSync(`concierge-${lang}-rotated.png`, `concierge-${lang}.png`);
 
         console.log(`concierge-${lang}.png criado`);
     }

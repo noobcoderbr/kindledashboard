@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Kindle Events — Preview</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #888;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+    gap: 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  h2 {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: .7;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+
+  .kindle-frame {
+    background: #fff;
+    width: 536px;
+    min-height: 200px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+    padding: 28px 24px;
+    font-family: Georgia, serif;
+  }
+
+  .section-eyebrow {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e0e0e0;
+  }
+
+  .ev-card {
+    border-left: 3px solid #111;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    background: #fafafa;
+    border-radius: 0 6px 6px 0;
+  }
+  .ev-card:last-child { margin-bottom: 0; }
+
+  .ev-title {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 4px;
+    color: #111;
+  }
+
+  .ev-when {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 5px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .ev-note {
+    font-size: 13px;
+    color: #444;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .ev-instagram {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .no-events {
+    text-align: center;
+    padding: 24px;
+    color: #999;
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  .controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .ctrl-label { color: #fff; font-size: 13px; opacity: .8; }
+
+  select, button {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  select { background: #fff; color: #1d1d1f; }
+  button { background: #0071e3; color: #fff; font-weight: 500; }
+  button:hover { opacity: .85; }
+
+  a.back {
+    color: #fff;
+    font-size: 13px;
+    opacity: .7;
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 8px;
+  }
+  a.back:hover { opacity: 1; }
+
+  .debug {
+    color: rgba(255,255,255,.5);
+    font-size: 12px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <a href="admin.html" class="back">← Admin</a>
+  <span class="ctrl-label">Idioma:</span>
+  <select id="langSelect" onchange="render()">
+    <option value="pt">Português</option>
+    <option value="en">English</option>
+  </select>
+  <span class="ctrl-label">Simular dia:</span>
+  <select id="daySelect" onchange="render()">
+    <option value="">Hoje</option>
+    <option value="monday">Segunda</option>
+    <option value="tuesday">Terça</option>
+    <option value="wednesday">Quarta</option>
+    <option value="thursday">Quinta</option>
+    <option value="friday">Sexta</option>
+    <option value="saturday">Sábado</option>
+    <option value="sunday">Domingo</option>
+  </select>
+  <button onclick="loadFromStorage()">↻ Recarregar eventos</button>
+</div>
+
+<h2>Preview — como aparece no Kindle</h2>
+
+<div class="kindle-frame">
+  <div class="section-eyebrow" id="eyebrow">Eventos próximos</div>
+  <div id="eventDisplay"></div>
+</div>
+
+<div class="debug" id="debugInfo"></div>
+
+<script>
+const SEED = [
+  { "id":"1","status":"approved","type":"recurring","recurringDay":"saturday","date":null,"title_pt":"Feira de Antiguidades","title_en":"Antiques Fair","note_pt":"Praça XV de Novembro, das 9h às 17h","note_en":"Praça XV de Novembro, 9am – 5pm","instagram":"@feiraxv" },
+  { "id":"2","status":"approved","type":"recurring","recurringDay":"sunday","date":null,"title_pt":"Feira Hippie de Ipanema","title_en":"Ipanema Hippie Fair","note_pt":"Praça General Osório, das 9h às 18h","note_en":"Praça General Osório, 9am – 6pm","instagram":"@feirahippie" },
+  { "id":"3","status":"approved","type":"oneoff","recurringDay":null,"date":"2026-09-13","title_pt":"Rock in Rio","title_en":"Rock in Rio","note_pt":"Cidade do Rock, Barra da Tijuca","note_en":"Cidade do Rock, Barra da Tijuca","instagram":"@rockinrio" },
+  { "id":"4","status":"approved","type":"recurring","recurringDay":"saturday","date":null,"title_pt":"Feira do Lavradio","title_en":"Lavradio Antiques Street Fair","note_pt":"Rua do Lavradio, Lapa, das 9h às 17h","note_en":"Rua do Lavradio, Lapa, 9am – 5pm","instagram":"@feiradolavradio" },
+  { "id":"5","status":"approved","type":"recurring","recurringDay":"sunday","date":null,"title_pt":"Feira de São Cristóvão","title_en":"São Cristóvão Fair","note_pt":"Centro Luiz Gonzaga, das 10h às 22h","note_en":"Centro Luiz Gonzaga, 10am – 10pm","instagram":"@feirasaocristovao" },
+  { "id":"6","status":"approved","type":"oneoff","recurringDay":null,"date":"2026-07-04","title_pt":"Festa Junina do SESC","title_en":"SESC June Festival","note_pt":"SESC Tijuca, a partir das 15h","note_en":"SESC Tijuca, from 3pm","instagram":"@sescrj" },
+  { "id":"7","status":"pending","type":"oneoff","recurringDay":null,"date":"2026-08-15","title_pt":"Parada do Orgulho LGBT+","title_en":"LGBT+ Pride Parade","note_pt":"Copacabana, a partir das 14h","note_en":"Copacabana, from 2pm","instagram":"@paradariorj" }
+];
+
+let events = JSON.parse(localStorage.getItem('kindle-events') || 'null') || SEED;
+
+function loadFromStorage() {
+  events = JSON.parse(localStorage.getItem('kindle-events') || 'null') || SEED;
+  render();
+}
+
+const DAY_INDEX = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
+const DAY_DISPLAY = {
+  pt: { monday:'Segunda',tuesday:'Terça',wednesday:'Quarta',thursday:'Quinta',friday:'Sexta',saturday:'Sábado',sunday:'Domingo' },
+  en: { monday:'Monday',tuesday:'Tuesday',wednesday:'Wednesday',thursday:'Thursday',friday:'Friday',saturday:'Saturday',sunday:'Sunday' }
+};
+
+const LABELS = {
+  pt: { eyebrow:'Eventos próximos', today:'Hoje', noEvents:'Sem eventos próximos.' },
+  en: { eyebrow:'Upcoming Events',  today:'Today', noEvents:'No upcoming events.' }
+};
+
+function getTodayDay() {
+  const sel = document.getElementById('daySelect').value;
+  return sel || DAY_INDEX[new Date().getDay()];
+}
+
+// Returns ISO date string (YYYY-MM-DD) for today (or simulated today)
+function getTodayIso(todayDay) {
+  const now = new Date();
+  const realDay = DAY_INDEX[now.getDay()];
+  if (!document.getElementById('daySelect').value) {
+    return now.toLocaleDateString('en-CA');
+  }
+  // Simulate: shift today by the difference in days
+  const realIdx = DAY_INDEX.indexOf(realDay);
+  const simIdx  = DAY_INDEX.indexOf(todayDay);
+  let diff = (simIdx - realIdx + 7) % 7;
+  const sim = new Date(now);
+  sim.setDate(sim.getDate() + diff);
+  return sim.toLocaleDateString('en-CA');
+}
+
+// Compute next occurrence ISO date for any event relative to todayIso/todayDay
+function nextOccurrence(ev, todayIso, todayDay) {
+  if (ev.status !== 'approved') return null;
+
+  if (ev.type === 'oneoff') {
+    return ev.date >= todayIso ? ev.date : null;
+  }
+
+  // recurring: find next day of week >= today (including today)
+  const todayIdx = DAY_INDEX.indexOf(todayDay);
+  const evIdx    = DAY_INDEX.indexOf(ev.recurringDay);
+  const daysAhead = (evIdx - todayIdx + 7) % 7; // 0 = today
+
+  const base = new Date(todayIso + 'T00:00:00Z');
+  base.setUTCDate(base.getUTCDate() + daysAhead);
+  return base.toISOString().slice(0, 10);
+}
+
+function formatWhen(ev, nextDate, lang, todayIso) {
+  const L = LABELS[lang];
+  if (nextDate === todayIso) return L.today.toUpperCase();
+
+  if (ev.type === 'recurring') {
+    return DAY_DISPLAY[lang][ev.recurringDay].toUpperCase();
+  }
+
+  // oneoff: format the date
+  const [y, m, d] = nextDate.split('-');
+  const date = new Date(y, m-1, d);
+  const locale = lang === 'pt' ? 'pt-BR' : 'en-US';
+  const opts = lang === 'pt'
+    ? { weekday:'long', day:'numeric', month:'long' }
+    : { weekday:'long', month:'long', day:'numeric' };
+  return date.toLocaleDateString(locale, opts);
+}
+
+function getNextEvents(todayIso, todayDay, max = 3) {
+  return events
+    .map(ev => ({ ev, next: nextOccurrence(ev, todayIso, todayDay) }))
+    .filter(x => x.next !== null)
+    .sort((a, b) => a.next.localeCompare(b.next))
+    .slice(0, max);
+}
+
+function cardHtml(ev, nextDate, lang, todayIso) {
+  const title = lang === 'pt' ? ev.title_pt : (ev.title_en || ev.title_pt);
+  const note  = lang === 'pt' ? ev.note_pt  : (ev.note_en  || ev.note_pt);
+  const when  = formatWhen(ev, nextDate, lang, todayIso);
+  return `
+<div class="ev-card">
+  <div class="ev-when">${when}</div>
+  <div class="ev-title">${title}</div>
+  <div class="ev-note">${note}</div>
+  ${ev.instagram ? `<div class="ev-instagram">${ev.instagram}</div>` : ''}
+</div>`;
+}
+
+function render() {
+  const lang     = document.getElementById('langSelect').value;
+  const L        = LABELS[lang];
+  const todayDay = getTodayDay();
+  const todayIso = getTodayIso(todayDay);
+
+  document.getElementById('eyebrow').textContent = L.eyebrow;
+
+  const items = getNextEvents(todayIso, todayDay, 3);
+
+  document.getElementById('debugInfo').textContent =
+    `Simulando: ${todayDay} (${todayIso}) · ${items.length} evento(s) encontrado(s)`;
+
+  if (!items.length) {
+    document.getElementById('eventDisplay').innerHTML =
+      `<div class="no-events">${L.noEvents}</div>`;
+    return;
+  }
+
+  document.getElementById('eventDisplay').innerHTML =
+    items.map(({ ev, next }) => cardHtml(ev, next, lang, todayIso)).join('');
+}
+
+render();
+</script>
+</body>
+</html>
