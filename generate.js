@@ -122,7 +122,10 @@ async function run() {
     });
 
     const page = await browser.newPage();
-    await page.setViewport({ width: 1072, height: 1448 });
+    // LANDSCAPE mode: 1448×1072
+    // To switch to PORTRAIT: change to { width: 1072, height: 1448 },
+    // update styles.css dimensions, and uncomment the sharp.rotate block below.
+    await page.setViewport({ width: 1448, height: 1072 });
 
     await page.goto('file://' + process.cwd() + '/template.html', { waitUntil: 'networkidle0' });
     await page.evaluate(() => document.fonts.ready);
@@ -175,12 +178,12 @@ async function run() {
 
         await page.screenshot({ path: `concierge-${lang}.png` });
 
-        // rotate 90° counter-clockwise for landscape Kindle display
-        await sharp(`concierge-${lang}.png`)
-            .rotate(-90)
-            .toFile(`concierge-${lang}-rotated.png`);
-        const fs = require('fs');
-        fs.renameSync(`concierge-${lang}-rotated.png`, `concierge-${lang}.png`);
+        // PORTRAIT only: uncomment to rotate 90° counter-clockwise
+        // await sharp(`concierge-${lang}.png`)
+        //     .rotate(-90)
+        //     .toFile(`concierge-${lang}-rotated.png`);
+        // const fs = require('fs');
+        // fs.renameSync(`concierge-${lang}-rotated.png`, `concierge-${lang}.png`);
 
         console.log(`concierge-${lang}.png criado`);
     }
